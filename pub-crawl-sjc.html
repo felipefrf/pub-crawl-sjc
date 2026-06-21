@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍺 Pub Crawl São José dos Campos — 27/06/2026</title>
+<meta name="description" content="27 bares em 1 dia em São José dos Campos. Roteiro completo: Centro → Vila Ema → Vila Adyana → São Dimas → Av. Andrômeda.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<style>
+:root {
+  --c-centro: #FCD34D;
+  --c-vila: #FB923C;
+  --c-dimas: #F472B6;
+  --c-andromeda: #A78BFA;
+  --bg-dark: #0B1020;
+  --bg-darker: #050817;
+  --bg-card: #131A33;
+  --bg-card-hover: #1A2347;
+  --text: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+  --accent: #FBBF24;
+  --neon-pink: #FF3CAC;
+  --neon-blue: #2DB2FF;
+  --neon-green: #00F5D4;
+  --shadow: 0 20px 60px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 40px rgba(167,139,250,0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(at 20% 0%, rgba(252, 211, 77, 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(167, 139, 250, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(244, 114, 182, 0.10) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, .display {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(252, 211, 77, 0.15), transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(167, 139, 250, 0.20), transparent 35%);
+  animation: heroGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+.hero-emoji-row {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  animation: floatBeer 3s ease-in-out infinite;
+}
+
+@keyframes floatBeer {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hero-emoji-row span {
+  display: inline-block;
+  animation: floatBeer 3s ease-in-out infinite;
+}
+.hero-emoji-row span:nth-child(2) { animation-delay: 0.2s; }
+.hero-emoji-row span:nth-child(3) { animation-delay: 0.4s; }
+.hero-emoji-row span:nth-child(4) { animation-delay: 0.6s; }
+.hero-emoji-row span:nth-child(5) { animation-delay: 0.8s; }
+
+.hero h1 {
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  line-height: 0.95;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #FCD34D 0%, #F472B6 50%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 80px rgba(167, 139, 250, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.hero .subtitle {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero .subtitle strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.hero-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  padding: 0.5rem 1.2rem;
+  border-radius: 100px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+}
+
+.hero-date-badge::before {
+  content: '📅';
+}
+
+/* Countdown */
+.countdown {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.countdown-unit {
+  background: rgba(19, 26, 51, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  min-width: 90px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.countdown-unit:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(167, 139, 250, 0.3);
+}
+
+.countdown-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  line-height: 1;
+  background: linear-gradient(135deg, #FCD34D, #F472B6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.countdown-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+/* Stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  max-width: 800px;
+  width: 100%;
+  margin: 2rem 0 0;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-card {
+  background: rgba(19, 26, 51, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.stat-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.stat-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--accent);
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  text-align: center;
+  z-index: 1;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+.scroll-cue::after {
+  content: '↓';
+  display: block;
+  font-size: 1.5rem;
+  margin-top: 0.3rem;
+}
+
+/* ===== SEÇÕES GERAIS ===== */
+section {
+  padding: 5rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.section-title .emoji {
+  display: inline-block;
+  margin-right: 0.5rem;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-15deg); }
+  75% { transform: rotate(15deg); }
+}
+
+.section-sub {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== HIGHLIGHTS ===== */
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+}
+
+.highlight-card {
+  background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(167, 139, 250, 0.05));
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  border-radius: 20px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.highlight-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.15), transparent 60%);
+  pointer-events: none;
+}
+
+.highlight-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(244, 114, 182, 0.25);
+}
+
+.highlight-emoji {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+}
+
+.highlight-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.highlight-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ===== MAPA ===== */
+.map-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+#map {
+  height: 600px;
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+  z-index: 1;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(19, 26, 51, 0.7);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: 0 0 12px currentColor;
+}
+
+/* Custom map markers */
+.marker-pin {
+  width: 36px;
+  height: 36px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--accent);
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -18px 0 0 -18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  border: 2.5px solid white;
+}
+
+.marker-pin::after {
+  content: attr(data-num);
+  width: 30px;
+  height: 30px;
+  margin: 2.5px 0 0 2.5px;
+  position: absolute;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  background: inherit;
+  color: white;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  line-height: 30px;
+  transform: rotate(45deg);
+}
+
+.marker-pin.pulse {
+  animation: pinPulse 1.5s ease-out infinite;
+}
+
+@keyframes pinPulse {
+  0% { box-shadow: 0 0 0 0 currentColor, 0 4px 12px rgba(0,0,0,0.4); }
+  100% { box-shadow: 0 0 0 20px transparent, 0 4px 12px rgba(0,0,0,0.4); }
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--bg-card) !important;
+  color: var(--text) !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+
+.leaflet-popup-tip { background: var(--bg-card) !important; }
+
+.popup-content {
+  padding: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.popup-content .num {
+  display: inline-block;
+  background: var(--accent);
+  color: #0B1020;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  padding: 0.1rem 0.6rem;
+  border-radius: 6px;
+  margin-right: 0.4rem;
+}
+
+.popup-content .name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  display: block;
+  margin: 0.3rem 0;
+}
+
+.popup-content .time {
+  color: var(--accent);
+  font-family: 'Fredoka', monospace;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.popup-content .rating {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+/* ===== TIMELINE ===== */
+.timeline {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--c-centro) 0%, var(--c-vila) 33%, var(--c-dimas) 66%, var(--c-andromeda) 100%);
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+}
+
+@media (min-width: 768px) {
+  .timeline::before {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.bloco-header {
+  position: relative;
+  margin: 3rem 0 2rem;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: 60px;
+  border: 2px solid;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+@media (min-width: 768px) {
+  .bloco-header { margin-left: 0; }
+}
+
+.bloco-header.centro { background: linear-gradient(135deg, rgba(252, 211, 77, 0.15), rgba(252, 211, 77, 0.05)); border-color: var(--c-centro); color: var(--c-centro); }
+.bloco-header.vila { background: linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(251, 146, 60, 0.05)); border-color: var(--c-vila); color: var(--c-vila); }
+.bloco-header.dimas { background: linear-gradient(135deg, rgba(244, 114, 182, 0.15), rgba(244, 114, 182, 0.05)); border-color: var(--c-dimas); color: var(--c-dimas); }
+.bloco-header.andromeda {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(167, 139, 250, 0.05));
+  border-color: var(--c-andromeda);
+  color: var(--c-andromeda);
+  box-shadow: 0 0 40px rgba(167, 139, 250, 0.3);
+  font-size: 1.8rem;
+}
+
+.bloco-periodo {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  font-weight: 500;
+}
+
+.bar-item {
+  position: relative;
+  margin-bottom: 1.2rem;
+  padding-left: 80px;
+}
+
+@media (min-width: 768px) {
+  .bar-item { padding-left: 0; padding-right: calc(50% + 40px); }
+  .bar-item:nth-child(even) { padding-right: 0; padding-left: calc(50% + 40px); }
+}
+
+.bar-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 1.2rem 1.4rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  background: var(--bg-card-hover);
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 15px 40px rgba(167, 139, 250, 0.15);
+}
+
+.bar-card.gran-finale {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(244, 114, 182, 0.1));
+  border: 2px solid var(--c-andromeda);
+  box-shadow: var(--shadow-glow);
+  position: relative;
+}
+
+.bar-card.gran-finale::before {
+  content: '🎉';
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  font-size: 2.5rem;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+.bar-number {
+  position: absolute;
+  left: -52px;
+  top: 1rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: #0B1020;
+  font-weight: 700;
+  box-shadow: 0 0 0 4px var(--bg-dark), 0 4px 15px rgba(0,0,0,0.5);
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .bar-number {
+    left: auto;
+    right: -66px;
+  }
+  .bar-item:nth-child(even) .bar-number { right: auto; left: -66px; }
+}
+
+.bar-number.centro { background: var(--c-centro); }
+.bar-number.vila { background: var(--c-vila); }
+.bar-number.dimas { background: var(--c-dimas); color: white; }
+.bar-number.andromeda {
+  background: var(--c-andromeda);
+  box-shadow: 0 0 0 4px var(--bg-dark), 0 0 20px var(--c-andromeda);
+}
+
+.bar-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bar-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  flex: 1;
+  min-width: 0;
+}
+
+.bar-emoji {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.bar-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--accent);
+  padding: 0.3rem 0.8rem;
+  border-radius: 100px;
+  font-family: 'Fredoka', monospace;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  margin-bottom: 0.6rem;
+}
+
+.bar-address {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.bar-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.bar-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 0.25rem 0.65rem;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.bar-chip.rating { background: rgba(251, 191, 36, 0.12); color: var(--accent); border-color: rgba(251, 191, 36, 0.3); }
+.bar-chip.price { background: rgba(0, 245, 212, 0.1); color: var(--neon-green); border-color: rgba(0, 245, 212, 0.3); }
+.bar-chip.tipo { background: rgba(45, 178, 255, 0.1); color: var(--neon-blue); border-color: rgba(45, 178, 255, 0.3); }
+
+.bar-dica {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent);
+  border-left: 3px solid var(--accent);
+  padding: 0.7rem 0.9rem;
+  border-radius: 0 10px 10px 0;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-top: 0.5rem;
+}
+
+.bar-dica strong { color: var(--accent); }
+
+.bar-connector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0 0.4rem 80px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+@media (min-width: 768px) {
+  .bar-connector { margin-left: 0; padding-right: calc(50% + 40px); }
+  .bar-item:nth-child(even) .bar-connector { padding-right: 0; padding-left: calc(50% + 40px); }
+}
+
+.bar-connector::before {
+  content: '🚶';
+}
+
+/* ===== STATS FINAIS ===== */
+.final-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.final-stat {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.final-stat::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--c-centro), var(--c-vila), var(--c-dimas), var(--c-andromeda));
+}
+
+.final-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  background: linear-gradient(135deg, #FCD34D, #A78BFA);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+}
+
+.final-stat-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* ===== TIMELINE HORIZONTAL ===== */
+.timeline-horizontal {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 2rem 1rem;
+  margin: 3rem 0;
+  overflow-x: auto;
+}
+
+.timeline-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-width: 1200px;
+  position: relative;
+  padding: 2rem 0;
+}
+
+.timeline-track::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--c-centro) 0%, var(--c-vila) 35%, var(--c-dimas) 60%, var(--c-andromeda) 100%);
+  border-radius: 6px;
+  z-index: 0;
+}
+
+.tl-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  min-width: 50px;
+}
+
+.tl-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg-dark);
+  box-shadow: 0 0 12px currentColor;
+  margin: 0 0 0.5rem;
+}
+
+.tl-time {
+  font-family: 'Fredoka', monospace;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.tl-name {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  max-width: 60px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--bg-darker);
+  padding: 4rem 1.5rem 2rem;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 4rem;
+}
+
+.footer-cta {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #FCD34D, #F472B6, #A78BFA);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.share-btn {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text);
+  padding: 0.8rem 1.5rem;
+  border-radius: 100px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2rem 0;
+}
+
+.qr-code {
+  background: white;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.qr-caption {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.disclaimer {
+  margin-top: 3rem;
+  padding: 1rem;
+  background: rgba(244, 114, 182, 0.1);
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.disclaimer::before { content: '⚠️ '; }
+
+.footer-credits {
+  margin-top: 2rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* Print */
+@media print {
+  body { background: white; color: black; }
+  .hero { min-height: auto; padding: 2rem; }
+  section { padding: 1.5rem 0.5rem; }
+  .bar-card { break-inside: avoid; page-break-inside: avoid; border: 1px solid #ccc; }
+  #map { display: none; }
+}
+
+/* Util */
+.section-anchor {
+  scroll-margin-top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-emoji-row">
+    <span>🍺</span><span>🍻</span><span>🥂</span><span>🍹</span><span>🍸</span>
+  </div>
+  <h1>Pub Crawl<br>São José dos Campos</h1>
+  <p class="subtitle">27 bares em <strong>1 dia épico</strong> — a pé, sem carro</p>
+  <div class="hero-date-badge">Sábado, 27 de Junho de 2026</div>
+  
+  <div class="countdown" id="countdown">
+    <div class="countdown-unit"><div class="countdown-num" id="cd-days">--</div><div class="countdown-label">Dias</div></div>
+    <div class="countdown-unit"><div class="countdown-num" id="cd-hours">--</div><div class="countdown-label">Horas</div></div>
+    <div class="countdown-unit"><div class="countdown-num" id="cd-mins">--</div><div class="countdown-label">Min</div></div>
+    <div class="countdown-unit"><div class="countdown-num" id="cd-secs">--</div><div class="countdown-label">Seg</div></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card"><span class="stat-icon">🍻</span><span class="stat-value">27</span><div class="stat-label">Bares</div></div>
+    <div class="stat-card"><span class="stat-icon">🚶</span><span class="stat-value">5.8<span style="font-size:1rem">km</span></span><div class="stat-label">A pé</div></div>
+    <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-value">16<span style="font-size:1rem">h</span></span><div class="stat-label">De festa</div></div>
+    <div class="stat-card"><span class="stat-icon">📍</span><span class="stat-value">7</span><div class="stat-label">Bairros</div></div>
+    <div class="stat-card"><span class="stat-icon">⭐</span><span class="stat-value">11.7<span style="font-size:1rem">k</span></span><div class="stat-label">Reviews</div></div>
+  </div>
+  
+  <div class="scroll-cue">role pra ver a rota<br>completa</div>
+</header>
+
+<!-- HIGHLIGHTS -->
+<section id="highlights" class="section-anchor">
+  <h2 class="section-title"><span class="emoji">✨</span>Destaques do Dia</h2>
+  <p class="section-sub">Os momentos imperdíveis do roteiro</p>
+  <div class="highlights" id="highlights-grid"></div>
+</section>
+
+<!-- MAPA -->
+<section id="mapa" class="map-section section-anchor">
+  <h2 class="section-title"><span class="emoji">🗺️</span>Mapa do Percurso</h2>
+  <p class="section-sub">Do Centro até o coração da Av. Andrômeda — tudo a pé</p>
+  <div class="map-legend" id="map-legend"></div>
+  <div id="map"></div>
+</section>
+
+<!-- TIMELINE -->
+<section id="roteiro" class="section-anchor">
+  <h2 class="section-title"><span class="emoji">🛣️</span>O Roteiro Completo</h2>
+  <p class="section-sub">27 bares, 4 blocos, 16 horas. Clique em cada um para abrir no Google Maps.</p>
+  <div class="timeline" id="timeline"></div>
+</section>
+
+<!-- TIMELINE HORIZONTAL -->
+<section id="visao-geral" class="section-anchor">
+  <h2 class="section-title"><span class="emoji">📅</span>Visão Geral do Dia</h2>
+  <p class="section-sub">A linha do tempo de toda a jornada</p>
+  <div class="timeline-horizontal">
+    <div class="timeline-track" id="timeline-track"></div>
+  </div>
+</section>
+
+<!-- STATS FINAIS -->
+<section id="stats-finais" class="section-anchor">
+  <h2 class="section-title"><span class="emoji">📊</span>Em Números</h2>
+  <p class="section-sub">Porque números legais merecem destaque</p>
+  <div class="final-stats" id="final-stats"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-cta">Bora, galera? 🍻</div>
+  <p style="color: var(--text-muted); margin-bottom: 1rem;">Compartilha esse roteiro com a galera!</p>
+  <div class="share-buttons">
+    <a class="share-btn" id="share-whatsapp" target="_blank" rel="noopener">📱 WhatsApp</a>
+    <a class="share-btn" id="share-telegram" target="_blank" rel="noopener">✈️ Telegram</a>
+    <button class="share-btn" id="share-copy">🔗 Copiar link</button>
+    <a class="share-btn" id="share-ics" download="pub-crawl-sjc.ics">📅 Salvar no calendário</a>
+  </div>
+  <div class="qr-section">
+    <div class="qr-code" id="qrcode"></div>
+    <div class="qr-caption">Escaneie e abra a rota no Google Maps</div>
+  </div>
+  <div class="disclaimer">
+    Confirme horários de funcionamento dos bares antes do evento! Alguns podem ter alterações sazonais. Vá no seu ritmo — o importante é se divertir com responsabilidade. Beba água, coma bem e não dirija.
+  </div>
+  <div class="footer-credits">Roteiro criado com carinho • São José dos Campos, 27/06/2026</div>
+</footer>
+
+<script>
+// ============== DADOS ==============
+const DADOS = {
+  bares: [
+    {ordem:1, nome:"Bar Coronel", endereco:"Rua Francisco Raphael, 298 - Centro", coords:[-23.1820,-45.8800], chegada:"11:00", saida:"11:30", nota:4.6, reviews:2322, sabado:"11:00-23:45", tipo:"Boteco tradicional", preco:"$$", bairro:"Centro", bloco:"centro", dica:"Travellers' Choice do TripAdvisor — referência histórica de SJC. Chopp Brahma bem gelado + torresmo.", emoji:"🏛️"},
+    {ordem:2, nome:"Quintal da Cerveja", endereco:"Rua Francisco Raphael, 267 - Centro", coords:[-23.1822,-45.8800], chegada:"11:35", saida:"12:00", nota:4.4, reviews:250, sabado:"12:00-00:00", tipo:"Choperia artesanal", preco:"$$", bairro:"Centro", bloco:"centro", dica:"Cervejas artesanais da casa. Petiscos frescos, ambiente tranquilo pra abrir o dia.", emoji:"🍻"},
+    {ordem:3, nome:"Bar Sergipe", endereco:"Praça do Expedicionário, 106 - Centro", coords:[-23.1795,-45.8830], chegada:"12:10", saida:"12:30", nota:4.5, reviews:600, sabado:"12:00-00:00", tipo:"Boteco clássico", preco:"$", bairro:"Centro", bloco:"centro", dica:"Torresmo de rolo é o carro-chefe. Preço camarada, ambiente praianos.", emoji:"🥓"},
+    {ordem:4, nome:"Buteco e Restaurante do Mad", endereco:"Rua Siqueira Campos, 421 - Centro", coords:[-23.1835,-45.8780], chegada:"12:40", saida:"13:05", nota:4.3, reviews:400, sabado:"11:00-01:00", tipo:"Buteco / Restaurante", preco:"$$", bairro:"Centro", bloco:"centro", dica:"Bom pra quem quiser almoçar. Calabresa acebolada é destaque.", emoji:"🍽️"},
+    {ordem:5, nome:"Bar do Tohru", endereco:"Rua Rubião Júnior, 294 - Centro", coords:[-23.1813,-45.8810], chegada:"13:15", saida:"13:35", nota:4.2, reviews:300, sabado:"17:00-04:00", tipo:"Bar japonês-brasileiro", preco:"$$", bairro:"Centro", bloco:"centro", dica:"Fusão nipo-brasileira única. Drinks autorais diferentes do padrão de boteco.", emoji:"🍣"},
+    {ordem:6, nome:"Bar Chaparral da Villa", endereco:"Av. Heitor Villa Lobos, 979 - Vila Ema", coords:[-23.1905,-45.8845], chegada:"13:50", saida:"14:20", nota:4.3, reviews:800, sabado:"11:00-01:00", tipo:"Choperia com costela", preco:"$$", bairro:"Vila Ema", bloco:"vila", dica:"Costela assada pra dividir. Telão pra quem quiser acompanhar jogo.", emoji:"🍖"},
+    {ordem:7, nome:"Urbanus Bar", endereco:"Rua Casemiro de Abreu, 163 - Vila Ema", coords:[-23.1925,-45.8855], chegada:"14:30", saida:"14:55", nota:4.2, reviews:200, sabado:"11:00-15:00, 17:00-01:00", tipo:"Bar com música ao vivo", preco:"$$", bairro:"Vila Ema", bloco:"vila", dica:"Hambúrguer artesanal vale a pena. Música ao vivo nas noites.", emoji:"🎵"},
+    {ordem:8, nome:"Boteco80 Vila Ema", endereco:"Rua Gen. Osório, 76 - Vila Ema", coords:[-23.1930,-45.8840], chegada:"15:05", saida:"15:30", nota:4.1, reviews:99, sabado:"17:00-01:00", tipo:"Bar temático anos 80", preco:"$$", bairro:"Vila Ema", bloco:"vila", dica:"Decoração temática anos 80! Drinks com nomes retrô. Happy hour certeiro.", emoji:"🕹️"},
+    {ordem:9, nome:"Santo Agostinho Bar & Petiscos", endereco:"Rua Princesa Isabel, 220 - Vila Adyana", coords:[-23.1955,-45.8820], chegada:"15:45", saida:"16:10", nota:4.5, reviews:39, sabado:"18:00-00:00", tipo:"Bar petisqueira", preco:"$$", bairro:"Vila Adyana", bloco:"vila", dica:"'O melhor cantinho da Vila Adyana'. Petiscos caprichados.", emoji:"🐟"},
+    {ordem:10, nome:"O Turco Gordo", endereco:"Rua Pedro de Toledo, 108 - Vila Adyana", coords:[-23.1950,-45.8830], chegada:"16:20", saida:"16:45", nota:4.4, reviews:600, sabado:"18:00-00:00", tipo:"Bar rock", preco:"$$", bairro:"Vila Adyana", bloco:"vila", dica:"Ambiente rock'n'roll. Drinques diferentes, boa carta de cervejas.", emoji:"🎸"},
+    {ordem:11, nome:"Viela Bar", endereco:"Av. Nove de Julho, 157 - Vila Adyana", coords:[-23.1960,-45.8810], chegada:"16:55", saida:"17:15", nota:4.2, reviews:120, sabado:"18:00-00:00", tipo:"Bar descolado", preco:"$$", bairro:"Vila Adyana", bloco:"vila", dica:"Escondidinho na Vila Adyana, vibe descolada. Drinks diferentes.", emoji:"🌃"},
+    {ordem:12, nome:"Cento e Onze Bar", endereco:"Av. Dr. Adhemar de Barros, 1250 - São Dimas", coords:[-23.1980,-45.8885], chegada:"17:30", saida:"17:55", nota:4.2, reviews:400, sabado:"14:00-00:00", tipo:"Bar moderno com coquetéis", preco:"$$", bairro:"São Dimas", bloco:"dimas", dica:"Coquetelaria autoral. Ambiente moderno. Bom pra transição pro happy hour.", emoji:"🍸"},
+    {ordem:13, nome:"Empório Hopfields", endereco:"Rua Eliza Costa Santos, 200 - São Dimas", coords:[-23.1995,-45.8890], chegada:"18:05", saida:"18:35", nota:4.4, reviews:157, sabado:"16:00-00:00", tipo:"Tap house / craft beer", preco:"$$", bairro:"São Dimas", bloco:"dimas", dica:"O melhor de cerveja artesanal em SJC. 8 torneiras + 70 rótulos. Hambúrgueres artesanais.", emoji:"🍺"},
+    {ordem:14, nome:"Bar do Deis", endereco:"Av. Dr. Adhemar de Barros, 1060 - São Dimas", coords:[-23.1990,-45.8870], chegada:"18:45", saida:"19:10", nota:4.4, reviews:700, sabado:"17:00-00:00", tipo:"Boteco tradicional", preco:"$", bairro:"São Dimas", bloco:"dimas", dica:"Calabresa apimentada lendária. Boteco raiz, preço camarada.", emoji:"🌶️"},
+    {ordem:15, nome:"Moto Rock Café", endereco:"Av. Dr. Nelson D'Ávila, 1385 - São Dimas", coords:[-23.2025,-45.8910], chegada:"19:25", saida:"19:55", nota:4.3, reviews:500, sabado:"17:30-02:00", tipo:"Bar temático de motos", preco:"$$", bairro:"São Dimas", bloco:"dimas", dica:"Motos expostas, rock na caixa. Cerveja gelada, porções generosas. Abre até 2h!", emoji:"🏍️"},
+    {ordem:16, nome:"Pink Elephant Rooftop", endereco:"Av. Dr. Nelson D'Ávila, 1875 - São Dimas", coords:[-23.2040,-45.8925], chegada:"20:05", saida:"20:30", nota:4.3, reviews:300, sabado:"19:00-03:00", tipo:"Rooftop / balada", preco:"$$$", bairro:"São Dimas", bloco:"dimas", dica:"Vista privilegiada do rooftop. Drinks bem feitos. Mais balada que bar.", emoji:"🌆"},
+    {ordem:17, nome:"Saint Tropz Bar e Restaurante", endereco:"Av. Barão do Rio Branco, 855 - Esplanada", coords:[-23.2035,-45.8830], chegada:"20:45", saida:"21:10", nota:4.2, reviews:400, sabado:"12:00-23:00", tipo:"Bar e restaurante", preco:"$$", bairro:"Esplanada", bloco:"dimas", dica:"Petiscos com pegada mais refinada. Bom pra uma pausa antes da reta final.", emoji:"🥂"},
+    {ordem:18, nome:"Buxixo Gastrobar", endereco:"Jardim Esplanada (próximo ao banhado)", coords:[-23.2010,-45.8800], chegada:"21:20", saida:"21:50", nota:4.3, reviews:250, sabado:"16:00-00:00", tipo:"Gastropub", preco:"$$$", bairro:"Esplanada", bloco:"dimas", dica:"Vista do pôr do sol no banhado! Cortes grelhados. Última parada antes da Andrômeda.", emoji:"🌅"},
+    {ordem:19, nome:"Hora Extra Bar e Lanchonete", endereco:"Av. Perseu, 291 - J. Satélite", coords:[-23.2210,-45.8900], chegada:"22:10", saida:"22:30", nota:4.0, reviews:100, sabado:"09:00-22:00", tipo:"Bar / Lanchonete", preco:"$", bairro:"J. Satélite", bloco:"andromeda", dica:"Bar raiz de bairro, lanche rápido e cerveja. Chegada simbólica na Satélite.", emoji:"🥪"},
+    {ordem:20, nome:"Boteco da Esquina", endereco:"Av. Perseu, 1114 - J. Satélite", coords:[-23.2240,-45.8910], chegada:"22:40", saida:"23:00", nota:4.3, reviews:150, sabado:"14:00-00:00", tipo:"Boteco, chopp e rock", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Chopp sempre na temperatura certa. Rock clássico no som.", emoji:"🤘"},
+    {ordem:21, nome:"O Bequinho", endereco:"Av. Perseu, 1175 - J. Satélite", coords:[-23.2240,-45.8900], chegada:"23:10", saida:"23:30", nota:4.2, reviews:100, sabado:"16:00-01:00", tipo:"Bar com petiscos", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Petiscos bem servidos, atendimento família. Bom pra dividir uma porção.", emoji:"🍤"},
+    {ordem:22, nome:"Recanto do Portuga", endereco:"Rua Itapetinga, 41 - J. Satélite", coords:[-23.2245,-45.8880], chegada:"23:40", saida:"00:00", nota:4.1, reviews:100, sabado:"17:00-01:00", tipo:"Bar português", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Comida portuguesa autêntica. Bacalhau, pastéis de bacalhau. Cerveja bem gelada.", emoji:"🐙"},
+    {ordem:23, nome:"Bar Tô Chegando", endereco:"Av. Iguape, 704 - J. Satélite", coords:[-23.2230,-45.8885], chegada:"00:10", saida:"00:30", nota:4.2, reviews:120, sabado:"17:00-02:00", tipo:"Bar animado", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Animado até tarde. Ótimo pra meia-noite. Preço camarada.", emoji:"🎉"},
+    {ordem:24, nome:"Bar Chaparral Boteco", endereco:"Av. Andrômeda, 2380 - J. Satélite", coords:[-23.2205,-45.8870], chegada:"00:45", saida:"01:10", nota:4.3, reviews:1500, sabado:"16:00-01:00", tipo:"Boteco com chapas", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", dica:"O bar mais popular da Andrômeda! 1.500+ reviews. Chapas mistas e música ao vivo.", emoji:"🍺"},
+    {ordem:25, nome:"Snooker Music Bar", endereco:"Av. Andrômeda, 3330 - J. Satélite", coords:[-23.2230,-45.8800], chegada:"01:20", saida:"01:40", nota:4.0, reviews:250, sabado:"18:00-02:00", tipo:"Bar com sinuca", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", dica:"Sinuca liberada, música rolando. Pausa pra jogar uma partida antes do gran finale.", emoji:"🎱"},
+    {ordem:26, nome:"Ursu's Bar", endereco:"Av. Cidade Jardim, 2381 - J. Satélite", coords:[-23.2200,-45.8820], chegada:"01:55", saida:"02:15", nota:4.7, reviews:12, sabado:"15:00-00:00", tipo:"Bar temático do urso", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Quase 5 estrelas! Bar oficial da Cervejaria Colorado (4 tipos de chopp). Licor de doce de leite caseiro.", emoji:"🐻"},
+    {ordem:27, nome:"Gilmour Brewpub", endereco:"Av. Andrômeda, 880 - J. Satélite", coords:[-23.2225,-45.8865], chegada:"02:30", saida:"03:00", nota:5.0, reviews:3, sabado:"17:00-00:00", tipo:"Brewpub - rock ao vivo", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", dica:"GRAN FINALE! Cerveja artesanal fabricada lá mesmo, banda de rock ao vivo nos fins de semana. Encerramento épico do dia!", emoji:"🎤", finale:true}
+  ],
+  highlights: [
+    {emoji:"🎸", titulo:"Banda de Rock ao Vivo", descricao:"Fim da noite no Gilmour Brewpub com banda de rock e chopp artesanal fabricado no local."},
+    {emoji:"🌅", titulo:"Pôr do Sol no Buxixo", descricao:"Vista privilegiada do pôr do sol no banhado, no Buxixo Gastrobar (#18)."},
+    {emoji:"🏆", titulo:"O Mais Avaliado de SJC", descricao:"Bar Coronel abre o dia com 2.322 reviews e selo Travellers' Choice do TripAdvisor."},
+    {emoji:"🌶️", titulo:"Calabresa Apimentada", descricao:"Bar do Deis tem a calabresa apimentada lendária de SJC (#14)."},
+    {emoji:"🎯", titulo:"9 Paradas na Andrômeda", descricao:"A reta final é uma imersão total na Av. Andrômeda — coroa do pub crawl."}
+  ],
+  blocos: {
+    centro: {titulo:"Bloco 1 — Centro", periodo:"11:00 às 14:20", cor:"#FCD34D"},
+    vila: {titulo:"Bloco 2 — Vila Ema + Vila Adyana", periodo:"14:30 às 17:15", cor:"#FB923C"},
+    dimas: {titulo:"Bloco 3 — São Dimas + Esplanada", periodo:"17:30 às 21:50", cor:"#F472B6"},
+    andromeda: {titulo:"Bloco 4 — Av. Andrômeda (GRAN FINALE)", periodo:"22:10 às 03:00", cor:"#A78BFA"}
+  }
+};
+
+// ============== COUNTDOWN ==============
+(function() {
+  const target = new Date('2026-06-27T11:00:00-03:00').getTime();
+  function tick() {
+    const now = Date.now();
+    const diff = Math.max(0, target - now);
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = String(d).padStart(2, '0');
+    document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(m).padStart(2, '0');
+    document.getElementById('cd-secs').textContent = String(s).padStart(2, '0');
+  }
+  tick(); setInterval(tick, 1000);
+})();
+
+// ============== HIGHLIGHTS ==============
+const hl = document.getElementById('highlights-grid');
+DADOS.highlights.forEach(h => {
+  hl.insertAdjacentHTML('beforeend', `
+    <div class="highlight-card">
+      <span class="highlight-emoji">${h.emoji}</span>
+      <div class="highlight-title">${h.titulo}</div>
+      <div class="highlight-desc">${h.descricao}</div>
+    </div>
+  `);
+});
+
+// ============== LEGEND ==============
+const lg = document.getElementById('map-legend');
+Object.entries(DADOS.blocos).forEach(([key, b]) => {
+  lg.insertAdjacentHTML('beforeend', `
+    <div class="legend-item">
+      <span class="legend-dot" style="background:${b.cor}; color:${b.cor}"></span>
+      ${b.titulo}
+    </div>
+  `);
+});
+
+// ============== MAPA ==============
+const map = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView([-23.195, -45.885], 13);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap, © CARTO',
+  maxZoom: 19
+}).addTo(map);
+
+map.on('click', () => map.scrollWheelZoom.enable());
+map.on('mouseout', () => map.scrollWheelZoom.disable());
+
+// Adiciona marcadores
+const cores = {centro:'#FCD34D', vila:'#FB923C', dimas:'#F472B6', andromeda:'#A78BFA'};
+const latlngs = [];
+
+DADOS.bares.forEach((bar, i) => {
+  const cor = cores[bar.bloco];
+  const icon = L.divIcon({
+    className: 'custom-marker',
+    html: `<div class="marker-pin pulse" data-num="${bar.ordem}" style="background:${cor}; color:${cor}"></div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 36]
+  });
+  const m = L.marker(bar.coords, {icon, title: `${bar.ordem}. ${bar.nome}`}).addTo(map);
+  m.bindPopup(`
+    <div class="popup-content">
+      <span class="num">#${bar.ordem}</span>
+      <span class="time">${bar.chegada}–${bar.saida}</span>
+      <span class="name">${bar.emoji} ${bar.nome}</span>
+      <div class="rating">⭐ ${bar.nota} (${bar.reviews.toLocaleString('pt-BR')} reviews) · ${bar.bairro}</div>
+    </div>
+  `, { maxWidth: 280 });
+  latlngs.push(bar.coords);
+});
+
+// Polyline da rota
+const rota = L.polyline(latlngs, {
+  color: '#A78BFA',
+  weight: 4,
+  opacity: 0.7,
+  dashArray: '8, 8',
+  smoothFactor: 1.5
+}).addTo(map);
+
+// Adiciona uma rota com cor por bloco
+let currentBloco = null;
+let segmento = [];
+DADOS.bares.forEach((bar, i) => {
+  if (bar.bloco !== currentBloco) {
+    if (segmento.length > 0) {
+      L.polyline(segmento, { color: cores[currentBloco], weight: 3, opacity: 0.6, dashArray: '6,6' }).addTo(map);
+    }
+    currentBloco = bar.bloco;
+    segmento = [bar.coords];
+  } else {
+    segmento.push(bar.coords);
+  }
+});
+if (segmento.length > 0) {
+  L.polyline(segmento, { color: cores[currentBloco], weight: 3, opacity: 0.6, dashArray: '6,6' }).addTo(map);
+}
+
+map.fitBounds(rota.getBounds(), {padding: [40, 40]});
+
+// ============== TIMELINE ==============
+const tl = document.getElementById('timeline');
+const blocos = {centro: [], vila: [], dimas: [], andromeda: []};
+DADOS.bares.forEach(b => blocos[b.bloco].push(b));
+
+Object.entries(blocos).forEach(([key, bares]) => {
+  const bloco = DADOS.blocos[key];
+  tl.insertAdjacentHTML('beforeend', `
+    <div class="bloco-header ${key}">
+      <span>${bloco.titulo}</span>
+      <span class="bloco-periodo">${bloco.periodo}</span>
+    </div>
+  `);
+  bares.forEach((b, i) => {
+    const isFinale = b.finale;
+    tl.insertAdjacentHTML('beforeend', `
+      <div class="bar-item">
+        <div class="bar-number ${key}">${b.ordem}</div>
+        <div class="bar-card ${isFinale ? 'gran-finale' : ''}">
+          <div class="bar-header">
+            <div>
+              <div class="bar-name">${b.nome}</div>
+              <div class="bar-time">⏰ ${b.chegada} → ${b.saida}</div>
+            </div>
+            <div class="bar-emoji">${b.emoji}</div>
+          </div>
+          <div class="bar-address">📍 ${b.endereco}</div>
+          <div class="bar-meta">
+            <span class="bar-chip rating">⭐ ${b.nota} (${b.reviews.toLocaleString('pt-BR')})</span>
+            <span class="bar-chip price">${b.preco}</span>
+            <span class="bar-chip tipo">${b.tipo}</span>
+            <span class="bar-chip">🕒 Sáb: ${b.sabado}</span>
+          </div>
+          <div class="bar-dica"><strong>💡 Dica:</strong> ${b.dica}</div>
+          ${isFinale ? '<div style="margin-top:0.7rem; font-family:\'Permanent Marker\', cursive; color: var(--c-andromeda); font-size:1.2rem; text-align:center;">🎉 GRAN FINALE 🎉</div>' : ''}
+        </div>
+        ${i < bares.length - 1 ? `<div class="bar-connector">~${calcDist(b.coords, bares[i+1].coords)} km até o próximo</div>` : ''}
+      </div>
+    `);
+  });
+});
+
+function calcDist(c1, c2) {
+  const R = 6371;
+  const dLat = (c2[0]-c1[0]) * Math.PI/180;
+  const dLon = (c2[1]-c1[1]) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(c1[0]*Math.PI/180) * Math.cos(c2[0]*Math.PI/180) * Math.sin(dLon/2)**2;
+  return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(2);
+}
+
+// ============== TIMELINE HORIZONTAL ==============
+const track = document.getElementById('timeline-track');
+DADOS.bares.forEach((b, i) => {
+  const cor = cores[b.bloco];
+  track.insertAdjacentHTML('beforeend', `
+    <div class="tl-bar" title="${b.ordem}. ${b.nome} - ${b.chegada}">
+      <div class="tl-name">${b.emoji}</div>
+      <div class="tl-dot" style="background:${cor}; color:${cor}"></div>
+      <div class="tl-time">${b.chegada}</div>
+    </div>
+  `);
+});
+
+// ============== STATS FINAIS ==============
+const fs = document.getElementById('final-stats');
+const totalReviews = DADOS.bares.reduce((s, b) => s + b.reviews, 0);
+const distTotal = DADOS.bares.reduce((s, b, i) => {
+  if (i === 0) return 0;
+  return s + parseFloat(calcDist(DADOS.bares[i-1].coords, b.coords));
+}, 0);
+
+const stats = [
+  {num: '27', label: 'Bares Visitados'},
+  {num: totalReviews.toLocaleString('pt-BR'), label: 'Reviews Combinadas'},
+  {num: distTotal.toFixed(1) + ' km', label: 'A Pé no Total'},
+  {num: '16h', label: 'De Festa Contínua'},
+  {num: '4', label: 'Blocos de Roteiro'},
+  {num: '2.322', label: 'Reviews do Bar Coronel (#1)'}
+];
+stats.forEach(s => {
+  fs.insertAdjacentHTML('beforeend', `
+    <div class="final-stat">
+      <span class="final-stat-num">${s.num}</span>
+      <div class="final-stat-label">${s.label}</div>
+    </div>
+  `);
+});
+
+// ============== SHARE ==============
+const url = window.location.href;
+const texto = '🍺 Pub Crawl São José dos Campos — 27 bares em 1 dia (27/06/2026). Bora?';
+document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(texto + ' ' + url)}`;
+document.getElementById('share-telegram').href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(texto)}`;
+document.getElementById('share-copy').onclick = () => {
+  navigator.clipboard.writeText(url).then(() => {
+    const b = document.getElementById('share-copy');
+    b.textContent = '✅ Copiado!';
+    setTimeout(() => b.textContent = '🔗 Copiar link', 2000);
+  });
+};
+
+// ============== ICS CALENDAR ==============
+function generateICS() {
+  let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Pub Crawl SJC//PT-BR\n';
+  ics += 'BEGIN:VEVENT\n';
+  ics += 'DTSTART:20260627T110000\n';
+  ics += 'DTEND:20260628T030000\n';
+  ics += 'SUMMARY:🍺 Pub Crawl São José dos Campos (27 bares)\n';
+  ics += 'DESCRIPTION:Roteiro: Centro → Vila Ema → Vila Adyana → São Dimas → Av. Andrômeda. https://github.com/\n';
+  ics += 'LOCATION:Centro, São José dos Campos - SP\n';
+  ics += 'END:VEVENT\nEND:VCALENDAR';
+  const blob = new Blob([ics], {type: 'text/calendar'});
+  document.getElementById('share-ics').href = URL.createObjectURL(blob);
+}
+generateICS();
+
+// ============== QR CODE ==============
+const mapsUrl = 'https://www.google.com/maps/dir/' + DADOS.bares.map(b => `${b.coords[0]},${b.coords[1]}`).join('/');
+document.getElementById('qrcode').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(mapsUrl)}" alt="QR Code Google Maps" style="display:block; border-radius:8px;">`;
+
+// ============== REVEAL ON SCROLL ==============
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.bar-card, .highlight-card, .bloco-header').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+
+</script>
+</body>
+</html>
