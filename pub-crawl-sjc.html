@@ -254,10 +254,7 @@ h1, h2, h3, .display {
 }
 
 .scroll-cue {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: 3rem;
   color: var(--text-dim);
   font-size: 0.8rem;
   text-align: center;
@@ -266,8 +263,8 @@ h1, h2, h3, .display {
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-8px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .scroll-cue::after {
@@ -451,6 +448,25 @@ section {
 @keyframes pinPulse {
   0% { box-shadow: 0 0 0 0 currentColor, 0 4px 12px rgba(0,0,0,0.4); }
   100% { box-shadow: 0 0 0 20px transparent, 0 4px 12px rgba(0,0,0,0.4); }
+}
+
+/* Zone labels no mapa */
+.zona-label {
+  pointer-events: none;
+}
+.zona-label-content {
+  background: rgba(11, 16, 32, 0.85);
+  border: 2px solid;
+  border-radius: 100px;
+  padding: 0.3rem 0.8rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-align: center;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
 .leaflet-popup-content-wrapper {
@@ -978,7 +994,7 @@ footer {
     <span>🍺</span><span>🍻</span><span>🥂</span><span>🍹</span><span>🍸</span>
   </div>
   <h1>Pub Crawl<br>São José dos Campos</h1>
-  <p class="subtitle">27 bares em <strong>1 dia épico</strong> — a pé, sem carro</p>
+  <p class="subtitle">27 bares em <strong>1 dia épico</strong> — a pé, sem carro, com pausa pro almoço 🍽️</p>
   <div class="hero-date-badge">Sábado, 27 de Junho de 2026</div>
   
   <div class="countdown" id="countdown">
@@ -990,9 +1006,9 @@ footer {
 
   <div class="stats">
     <div class="stat-card"><span class="stat-icon">🍻</span><span class="stat-value">27</span><div class="stat-label">Bares</div></div>
-    <div class="stat-card"><span class="stat-icon">🚶</span><span class="stat-value">5.8<span style="font-size:1rem">km</span></span><div class="stat-label">A pé</div></div>
-    <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-value">16<span style="font-size:1rem">h</span></span><div class="stat-label">De festa</div></div>
-    <div class="stat-card"><span class="stat-icon">📍</span><span class="stat-value">7</span><div class="stat-label">Bairros</div></div>
+    <div class="stat-card"><span class="stat-icon">🚶</span><span class="stat-value">12<span style="font-size:1rem">km</span></span><div class="stat-label">A pé</div></div>
+    <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-value">14<span style="font-size:1rem">h</span></span><div class="stat-label">De festa</div></div>
+    <div class="stat-card"><span class="stat-icon">📍</span><span class="stat-value">6</span><div class="stat-label">Bairros</div></div>
     <div class="stat-card"><span class="stat-icon">⭐</span><span class="stat-value">11.7<span style="font-size:1rem">k</span></span><div class="stat-label">Reviews</div></div>
   </div>
   
@@ -1061,46 +1077,81 @@ footer {
 // ============== DADOS ==============
 const DADOS = {
   bares: [
-    {ordem:1, nome:"Bar Coronel", endereco:"Rua Francisco Raphael, 298 - Centro", coords:[-23.1820,-45.8800], chegada:"11:00", saida:"11:30", nota:4.6, reviews:2322, sabado:"11:00-23:45", tipo:"Boteco tradicional", preco:"$$", bairro:"Centro", bloco:"centro", dica:"Travellers' Choice do TripAdvisor — referência histórica de SJC. Chopp Brahma bem gelado + torresmo.", emoji:"🏛️"},
-    {ordem:2, nome:"Quintal da Cerveja", endereco:"Rua Francisco Raphael, 267 - Centro", coords:[-23.1822,-45.8800], chegada:"11:35", saida:"12:00", nota:4.4, reviews:250, sabado:"12:00-00:00", tipo:"Choperia artesanal", preco:"$$", bairro:"Centro", bloco:"centro", dica:"Cervejas artesanais da casa. Petiscos frescos, ambiente tranquilo pra abrir o dia.", emoji:"🍻"},
-    {ordem:3, nome:"Bar Sergipe", endereco:"Praça do Expedicionário, 106 - Centro", coords:[-23.1795,-45.8830], chegada:"12:10", saida:"12:30", nota:4.5, reviews:600, sabado:"12:00-00:00", tipo:"Boteco clássico", preco:"$", bairro:"Centro", bloco:"centro", dica:"Torresmo de rolo é o carro-chefe. Preço camarada, ambiente praianos.", emoji:"🥓"},
-    {ordem:4, nome:"Buteco e Restaurante do Mad", endereco:"Rua Siqueira Campos, 421 - Centro", coords:[-23.1835,-45.8780], chegada:"12:40", saida:"13:05", nota:4.3, reviews:400, sabado:"11:00-01:00", tipo:"Buteco / Restaurante", preco:"$$", bairro:"Centro", bloco:"centro", dica:"Bom pra quem quiser almoçar. Calabresa acebolada é destaque.", emoji:"🍽️"},
-    {ordem:5, nome:"Bar do Tohru", endereco:"Rua Rubião Júnior, 294 - Centro", coords:[-23.1813,-45.8810], chegada:"13:15", saida:"13:35", nota:4.2, reviews:300, sabado:"17:00-04:00", tipo:"Bar japonês-brasileiro", preco:"$$", bairro:"Centro", bloco:"centro", dica:"Fusão nipo-brasileira única. Drinks autorais diferentes do padrão de boteco.", emoji:"🍣"},
-    {ordem:6, nome:"Bar Chaparral da Villa", endereco:"Av. Heitor Villa Lobos, 979 - Vila Ema", coords:[-23.1905,-45.8845], chegada:"13:50", saida:"14:20", nota:4.3, reviews:800, sabado:"11:00-01:00", tipo:"Choperia com costela", preco:"$$", bairro:"Vila Ema", bloco:"vila", dica:"Costela assada pra dividir. Telão pra quem quiser acompanhar jogo.", emoji:"🍖"},
-    {ordem:7, nome:"Urbanus Bar", endereco:"Rua Casemiro de Abreu, 163 - Vila Ema", coords:[-23.1925,-45.8855], chegada:"14:30", saida:"14:55", nota:4.2, reviews:200, sabado:"11:00-15:00, 17:00-01:00", tipo:"Bar com música ao vivo", preco:"$$", bairro:"Vila Ema", bloco:"vila", dica:"Hambúrguer artesanal vale a pena. Música ao vivo nas noites.", emoji:"🎵"},
-    {ordem:8, nome:"Boteco80 Vila Ema", endereco:"Rua Gen. Osório, 76 - Vila Ema", coords:[-23.1930,-45.8840], chegada:"15:05", saida:"15:30", nota:4.1, reviews:99, sabado:"17:00-01:00", tipo:"Bar temático anos 80", preco:"$$", bairro:"Vila Ema", bloco:"vila", dica:"Decoração temática anos 80! Drinks com nomes retrô. Happy hour certeiro.", emoji:"🕹️"},
-    {ordem:9, nome:"Santo Agostinho Bar & Petiscos", endereco:"Rua Princesa Isabel, 220 - Vila Adyana", coords:[-23.1955,-45.8820], chegada:"15:45", saida:"16:10", nota:4.5, reviews:39, sabado:"18:00-00:00", tipo:"Bar petisqueira", preco:"$$", bairro:"Vila Adyana", bloco:"vila", dica:"'O melhor cantinho da Vila Adyana'. Petiscos caprichados.", emoji:"🐟"},
-    {ordem:10, nome:"O Turco Gordo", endereco:"Rua Pedro de Toledo, 108 - Vila Adyana", coords:[-23.1950,-45.8830], chegada:"16:20", saida:"16:45", nota:4.4, reviews:600, sabado:"18:00-00:00", tipo:"Bar rock", preco:"$$", bairro:"Vila Adyana", bloco:"vila", dica:"Ambiente rock'n'roll. Drinques diferentes, boa carta de cervejas.", emoji:"🎸"},
-    {ordem:11, nome:"Viela Bar", endereco:"Av. Nove de Julho, 157 - Vila Adyana", coords:[-23.1960,-45.8810], chegada:"16:55", saida:"17:15", nota:4.2, reviews:120, sabado:"18:00-00:00", tipo:"Bar descolado", preco:"$$", bairro:"Vila Adyana", bloco:"vila", dica:"Escondidinho na Vila Adyana, vibe descolada. Drinks diferentes.", emoji:"🌃"},
-    {ordem:12, nome:"Cento e Onze Bar", endereco:"Av. Dr. Adhemar de Barros, 1250 - São Dimas", coords:[-23.1980,-45.8885], chegada:"17:30", saida:"17:55", nota:4.2, reviews:400, sabado:"14:00-00:00", tipo:"Bar moderno com coquetéis", preco:"$$", bairro:"São Dimas", bloco:"dimas", dica:"Coquetelaria autoral. Ambiente moderno. Bom pra transição pro happy hour.", emoji:"🍸"},
-    {ordem:13, nome:"Empório Hopfields", endereco:"Rua Eliza Costa Santos, 200 - São Dimas", coords:[-23.1995,-45.8890], chegada:"18:05", saida:"18:35", nota:4.4, reviews:157, sabado:"16:00-00:00", tipo:"Tap house / craft beer", preco:"$$", bairro:"São Dimas", bloco:"dimas", dica:"O melhor de cerveja artesanal em SJC. 8 torneiras + 70 rótulos. Hambúrgueres artesanais.", emoji:"🍺"},
-    {ordem:14, nome:"Bar do Deis", endereco:"Av. Dr. Adhemar de Barros, 1060 - São Dimas", coords:[-23.1990,-45.8870], chegada:"18:45", saida:"19:10", nota:4.4, reviews:700, sabado:"17:00-00:00", tipo:"Boteco tradicional", preco:"$", bairro:"São Dimas", bloco:"dimas", dica:"Calabresa apimentada lendária. Boteco raiz, preço camarada.", emoji:"🌶️"},
-    {ordem:15, nome:"Moto Rock Café", endereco:"Av. Dr. Nelson D'Ávila, 1385 - São Dimas", coords:[-23.2025,-45.8910], chegada:"19:25", saida:"19:55", nota:4.3, reviews:500, sabado:"17:30-02:00", tipo:"Bar temático de motos", preco:"$$", bairro:"São Dimas", bloco:"dimas", dica:"Motos expostas, rock na caixa. Cerveja gelada, porções generosas. Abre até 2h!", emoji:"🏍️"},
-    {ordem:16, nome:"Pink Elephant Rooftop", endereco:"Av. Dr. Nelson D'Ávila, 1875 - São Dimas", coords:[-23.2040,-45.8925], chegada:"20:05", saida:"20:30", nota:4.3, reviews:300, sabado:"19:00-03:00", tipo:"Rooftop / balada", preco:"$$$", bairro:"São Dimas", bloco:"dimas", dica:"Vista privilegiada do rooftop. Drinks bem feitos. Mais balada que bar.", emoji:"🌆"},
-    {ordem:17, nome:"Saint Tropz Bar e Restaurante", endereco:"Av. Barão do Rio Branco, 855 - Esplanada", coords:[-23.2035,-45.8830], chegada:"20:45", saida:"21:10", nota:4.2, reviews:400, sabado:"12:00-23:00", tipo:"Bar e restaurante", preco:"$$", bairro:"Esplanada", bloco:"dimas", dica:"Petiscos com pegada mais refinada. Bom pra uma pausa antes da reta final.", emoji:"🥂"},
-    {ordem:18, nome:"Buxixo Gastrobar", endereco:"Jardim Esplanada (próximo ao banhado)", coords:[-23.2010,-45.8800], chegada:"21:20", saida:"21:50", nota:4.3, reviews:250, sabado:"16:00-00:00", tipo:"Gastropub", preco:"$$$", bairro:"Esplanada", bloco:"dimas", dica:"Vista do pôr do sol no banhado! Cortes grelhados. Última parada antes da Andrômeda.", emoji:"🌅"},
-    {ordem:19, nome:"Hora Extra Bar e Lanchonete", endereco:"Av. Perseu, 291 - J. Satélite", coords:[-23.2210,-45.8900], chegada:"22:10", saida:"22:30", nota:4.0, reviews:100, sabado:"09:00-22:00", tipo:"Bar / Lanchonete", preco:"$", bairro:"J. Satélite", bloco:"andromeda", dica:"Bar raiz de bairro, lanche rápido e cerveja. Chegada simbólica na Satélite.", emoji:"🥪"},
-    {ordem:20, nome:"Boteco da Esquina", endereco:"Av. Perseu, 1114 - J. Satélite", coords:[-23.2240,-45.8910], chegada:"22:40", saida:"23:00", nota:4.3, reviews:150, sabado:"14:00-00:00", tipo:"Boteco, chopp e rock", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Chopp sempre na temperatura certa. Rock clássico no som.", emoji:"🤘"},
-    {ordem:21, nome:"O Bequinho", endereco:"Av. Perseu, 1175 - J. Satélite", coords:[-23.2240,-45.8900], chegada:"23:10", saida:"23:30", nota:4.2, reviews:100, sabado:"16:00-01:00", tipo:"Bar com petiscos", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Petiscos bem servidos, atendimento família. Bom pra dividir uma porção.", emoji:"🍤"},
-    {ordem:22, nome:"Recanto do Portuga", endereco:"Rua Itapetinga, 41 - J. Satélite", coords:[-23.2245,-45.8880], chegada:"23:40", saida:"00:00", nota:4.1, reviews:100, sabado:"17:00-01:00", tipo:"Bar português", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Comida portuguesa autêntica. Bacalhau, pastéis de bacalhau. Cerveja bem gelada.", emoji:"🐙"},
-    {ordem:23, nome:"Bar Tô Chegando", endereco:"Av. Iguape, 704 - J. Satélite", coords:[-23.2230,-45.8885], chegada:"00:10", saida:"00:30", nota:4.2, reviews:120, sabado:"17:00-02:00", tipo:"Bar animado", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Animado até tarde. Ótimo pra meia-noite. Preço camarada.", emoji:"🎉"},
-    {ordem:24, nome:"Bar Chaparral Boteco", endereco:"Av. Andrômeda, 2380 - J. Satélite", coords:[-23.2205,-45.8870], chegada:"00:45", saida:"01:10", nota:4.3, reviews:1500, sabado:"16:00-01:00", tipo:"Boteco com chapas", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", dica:"O bar mais popular da Andrômeda! 1.500+ reviews. Chapas mistas e música ao vivo.", emoji:"🍺"},
-    {ordem:25, nome:"Snooker Music Bar", endereco:"Av. Andrômeda, 3330 - J. Satélite", coords:[-23.2230,-45.8800], chegada:"01:20", saida:"01:40", nota:4.0, reviews:250, sabado:"18:00-02:00", tipo:"Bar com sinuca", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", dica:"Sinuca liberada, música rolando. Pausa pra jogar uma partida antes do gran finale.", emoji:"🎱"},
-    {ordem:26, nome:"Ursu's Bar", endereco:"Av. Cidade Jardim, 2381 - J. Satélite", coords:[-23.2200,-45.8820], chegada:"01:55", saida:"02:15", nota:4.7, reviews:12, sabado:"15:00-00:00", tipo:"Bar temático do urso", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", dica:"Quase 5 estrelas! Bar oficial da Cervejaria Colorado (4 tipos de chopp). Licor de doce de leite caseiro.", emoji:"🐻"},
-    {ordem:27, nome:"Gilmour Brewpub", endereco:"Av. Andrômeda, 880 - J. Satélite", coords:[-23.2225,-45.8865], chegada:"02:30", saida:"03:00", nota:5.0, reviews:3, sabado:"17:00-00:00", tipo:"Brewpub - rock ao vivo", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", dica:"GRAN FINALE! Cerveja artesanal fabricada lá mesmo, banda de rock ao vivo nos fins de semana. Encerramento épico do dia!", emoji:"🎤", finale:true}
+    // ===== BLOCO 1 - CENTRO MANHÃ (11:00-12:30) =====
+    {ordem:1, nome:"Bar Coronel", endereco:"R. Francisco Rafael, 298 - Centro", coords:[-23.1820,-45.8835], chegada:"11:00", saida:"11:20", nota:4.6, reviews:2322, sabado:"11:00-23:30", tipo:"Boteco tradicional", preco:"$$", bairro:"Centro", bloco:"centro", zona:1, dica:"Travellers' Choice do TripAdvisor — referência histórica de SJC (desde 1992). Chopp Brahma bem gelado + torresmo. 125K seguidores no Instagram.", emoji:"🏛️"},
+    {ordem:2, nome:"Buteco e Restaurante do Mad", endereco:"R. Siqueira Campos, 421 - Centro", coords:[-23.1797,-45.8829], chegada:"11:25", saida:"11:45", nota:4.3, reviews:400, sabado:"11:00-23:00", tipo:"Buteco / Restaurante", preco:"$$", bairro:"Centro", bloco:"centro", zona:1, dica:"Petisco rápido pré-almoço. Calabresa acebolada é destaque. Fecha 23h, não dá pra voltar à noite.", emoji:"🍽️"},
+
+    // ===== BLOCO 2 - VILA EMA ALMOÇO (12:55-14:30) =====
+    {ordem:3, nome:"🍽️ ALMOÇO — Bar Chaparral da Villa", endereco:"Av. Heitor Villa Lobos, 979 - Vila Ema", coords:[-23.2037,-45.8979], chegada:"11:55", saida:"12:55", nota:4.3, reviews:800, sabado:"11:00-01:00", tipo:"Choperia + Restaurante (parada longa)", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, almoco:true, dica:"PARADA DE ALMOÇO (60min). Costela assada, telão pra acompanhar jogo. Melhor opção de almoço do dia. Coordenada validada: Villa Ema Bar & Chopperia (mesmo endereço). Estacionamento próprio.", emoji:"🍖"},
+    {ordem:4, nome:"Urbanus Bar", endereco:"R. Casemiro de Abreu, 163 - Vila Ema", coords:[-23.2056,-45.8965], chegada:"13:00", saida:"13:15", nota:4.2, reviews:200, sabado:"11:00-00:00", tipo:"Bar com música ao vivo", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, dica:"Drink rápido pós-almoço. Hambúrguer artesanal. Música ao vivo à noite. Coordenada validada.", emoji:"🎵"},
+
+    // ===== BLOCO 3 - NOITE: VILA EMA + ADYANA + SÃO DIMAS (17:00-21:00) =====
+    {ordem:5, nome:"Boteco80 Vila Ema", endereco:"R. Gen. Osório, 76 - Vila Ema", coords:[-23.2058,-45.8966], chegada:"17:00", saida:"17:15", nota:4.1, reviews:99, sabado:"17:00-01:00", tipo:"Bar temático anos 80", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, dica:"Decoração temática anos 80! Drinks com nomes retrô. Abre exatamente 17h. Instagram: @boteco80", emoji:"🕹️"},
+    {ordem:6, nome:"Bamberg Express SJC", endereco:"Av. Dr. Ademar de Barros, 1566 - Vila Adyana", coords:[-23.2058,-45.8946], chegada:"17:25", saida:"17:40", nota:4.7, reviews:221, sabado:"15:00-00:00", tipo:"Cervejaria artesanal / Gastrobar", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, dica:"NOVO NO ROTEIRO (substituiu Bar do Tohru que só abre 17h). Cervejaria artesanal com chopp de qualidade (inclui Double IPA), porções fartas, equipe elogiada. Abre 15h — visitamos logo após abrir.", emoji:"🍺"},
+    {ordem:7, nome:"O Turco Gordo", endereco:"R. Pedro de Toledo, 108 - Vila Adyana", coords:[-23.1993,-45.8938], chegada:"18:00", saida:"18:15", nota:4.4, reviews:600, sabado:"18:00-00:00", tipo:"Bar rock", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, dica:"Ambiente rock'n'roll. Drinks diferentes, boa carta de cervejas. Rock na playlist o tempo todo. Coordenada validada.", emoji:"🎸"},
+    {ordem:8, nome:"Santo Agostinho Bar & Petiscos", endereco:"R. do Serimbura, 77 - Vila Ema", coords:[-23.1883,-45.9122], chegada:"18:20", saida:"18:35", nota:4.5, reviews:39, sabado:"18:00-00:00", tipo:"Bar petisqueira", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, dica:"Considerado 'o melhor cantinho' da Vila Ema. Petiscos caprichados. Endereço corrigido: R. do Serimbura, 77.", emoji:"🐟"},
+    {ordem:9, nome:"Viela Bar", endereco:"Av. 9 de Julho, 157 (loja 06) - Vila Adyana", coords:[-23.1942,-45.8931], chegada:"18:40", saida:"18:55", nota:4.2, reviews:120, sabado:"18:00-00:00", tipo:"Bar descolado", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, dica:"Escondidinho na Vila Adyana, vibe descolada. Drinks diferentes do padrão. Coordenada validada.", emoji:"🌃"},
+    {ordem:10, nome:"Cento e Onze Bar", endereco:"Av. Dr. Ademar de Barros, 1250 - São Dimas", coords:[-23.2033,-45.8938], chegada:"19:00", saida:"19:15", nota:4.2, reviews:400, sabado:"16:00-01:00", tipo:"Bar moderno com coquetéis", preco:"$$", bairro:"São Dimas", bloco:"dimas", zona:3, dica:"Coquetelaria autoral. Ambiente moderno. Bom pra transição pro happy hour noturno. Coordenada validada.", emoji:"🍸"},
+    {ordem:11, nome:"Empório Hopfields", endereco:"R. Eliza Costa Santos, 200 - São Dimas", coords:[-23.1971,-45.8889], chegada:"19:20", saida:"19:40", nota:4.4, reviews:1510, sabado:"16:00-00:00", tipo:"Tap house / craft beer", preco:"$$", bairro:"São Dimas", bloco:"dimas", zona:3, dica:"O melhor de cerveja artesanal em SJC. 8 torneiras + 70 rótulos. Nº 1 em Bares e Pubs no TripAdvisor. Reviews atualizadas: 1.510 no Google (era subestimado em 157).", emoji:"🍺"},
+    {ordem:12, nome:"Bar do Maranhão", endereco:"Av. Cassiopéia, 628 - J. Satélite", coords:[-23.2235,-45.8860], chegada:"19:45", saida:"20:00", nota:4.3, reviews:50, sabado:"09:00-21:00", tipo:"Boteco regional maranhense", preco:"$", bairro:"J. Satélite", bloco:"dimas", zona:3, dica:"Substituiu o Bar do Deis (fechado em ago/2024). Culinária regional maranhense, preço acessível. Caminho natural pra Andrômeda.", emoji:"🍛"},
+    {ordem:13, nome:"Moto Rock Café", endereco:"Av. Dr. Nelson D'Ávila, 1385 - São Dimas", coords:[-23.1982,-45.8858], chegada:"20:05", saida:"20:20", nota:4.3, reviews:500, sabado:"17:30-02:00", tipo:"Bar temático de motos", preco:"$$", bairro:"São Dimas", bloco:"dimas", zona:3, dica:"Motos expostas, rock na caixa. Cerveja gelada, porções generosas. Abre até 2h! Coordenada validada.", emoji:"🏍️"},
+    {ordem:14, nome:"Pink Elephant Rooftop", endereco:"Av. Dr. Nelson D'Ávila, 1875 - São Dimas (Hotel Summit)", coords:[-23.2025,-45.8845], chegada:"20:30", saida:"20:45", nota:4.3, reviews:300, sabado:"19:00-03:00", tipo:"Rooftop / balada", preco:"$$$", bairro:"São Dimas", bloco:"dimas", zona:3, dica:"Vista privilegiada do rooftop no topo do Hotel Summit. Drinks bem feitos. Mais balada que bar. Só abre 19h. Coordenada corrigida.", emoji:"🌆"},
+
+    // ===== BLOCO 4 - FINAL ÉPICO ANDRÔMEDA (20:50-01:30) =====
+    {ordem:15, nome:"Bar Tô Chegando", endereco:"Av. Iguape, 704 - J. Satélite", coords:[-23.2351,-45.8877], chegada:"20:50", saida:"21:05", nota:4.2, reviews:120, sabado:"18:00-02:00", tipo:"Bar animado", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Início da reta final na Satélite. Animado até tarde. Preço camarada. Abre até 2h! Instagram: @bartochegando1", emoji:"🎉"},
+    {ordem:16, nome:"Bar do Ernesto", endereco:"Região central de SJC (verificar Instagram @bar.do.ernesto.sjc)", coords:[-23.1960,-45.8820], chegada:"21:10", saida:"21:25", nota:4.8, reviews:156, sabado:"17:00-00:00 (verificar)", tipo:"Bar de coquetéis / Petiscaria", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"NOVO (substituiu Buxixo Gastrobar que tinha endereço errado e sem pôr do sol). Avaliado como 'best bar in SJC'. Excelente 4.8★ com 156 reviews. ⚠️ Confirmar endereço exato antes do evento.", emoji:"🍸"},
+    {ordem:17, nome:"Choperia e Restaurante Flor de Ypê", endereco:"Av. Cassiopéia, 377 - J. Satélite", coords:[-23.2220,-45.8860], chegada:"21:30", saida:"21:45", nota:4.0, reviews:80, sabado:"17:00-00:00", tipo:"Choperia", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Choperia de bairro próxima da Andrômeda, ambiente familiar.", emoji:"🌸"},
+    {ordem:18, nome:"Lanchão & Cia", endereco:"Av. Andrômeda, 838 - J. Satélite", coords:[-23.2220,-45.8860], chegada:"21:50", saida:"22:05", nota:4.0, reviews:50, sabado:"18:00-00:00", tipo:"Lanchonete/Bar", preco:"$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Lanches e porções acessíveis — bom pra começar a noite na Andrômeda sem gastar muito. Primeira parada EFETIVA na Av. Andrômeda.", emoji:"🥪"},
+    {ordem:19, nome:"Ponto da Esfiha Pub & Bar", endereco:"Av. Andrômeda, 998 - J. Satélite", coords:[-23.2227,-45.8889], chegada:"22:10", saida:"22:25", nota:4.1, reviews:893, sabado:"08:00-23:45", tipo:"Pub/Esfiharia", preco:"$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Um dos bares MAIS populares da Andrômeda com 893 reviews. Esfihas, pizzas, hambúrgueres. Custo-benefício imbatível. Fecha 23:45 — pontualidade!", emoji:"🥙"},
+    {ordem:20, nome:"O Bequinho", endereco:"Av. Perseu, 1175 - J. Satélite", coords:[-23.2343,-45.8908], chegada:"22:30", saida:"22:45", nota:4.2, reviews:100, sabado:"16:00-01:00", tipo:"Bar com petiscos", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Petiscos bem servidos, atendimento família. Bom pra dividir uma porção antes do gran finale.", emoji:"🍤"},
+    {ordem:21, nome:"Recanto do Portuga", endereco:"R. Itapetinga, 41 - J. Satélite", coords:[-23.2329,-45.8852], chegada:"22:50", saida:"23:05", nota:4.1, reviews:100, sabado:"17:00-02:00", tipo:"Bar português", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Comida portuguesa autêntica. Bacalhau, pastéis de bacalhau. Cerveja bem gelada. Abre até 2h! Coordenada corrigida.", emoji:"🐙"},
+    {ordem:22, nome:"Obelisco Bar", endereco:"Av. Andrômeda, 2360 - J. Satélite", coords:[-23.2205,-45.8852], chegada:"23:10", saida:"23:25", nota:4.0, reviews:60, sabado:"17:00-00:00", tipo:"Bar/Pub", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Petiscos, cerveja gelada, ambiente de Andrômeda puro. Substituiu o Snooker Music Bar (provavelmente fechado).", emoji:"🗿"},
+    {ordem:23, nome:"Ursu's Bar (Bar do Urso)", endereco:"Av. Cidade Jardim, 2381 - J. Satélite", coords:[-23.2350,-45.8855], chegada:"23:30", saida:"23:40", nota:4.7, reviews:12, sabado:"16:00-00:00", tipo:"Bar temático do urso - Cervejas Colorado", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Quase 5 estrelas (4.7)! Bar oficial da Cervejaria Colorado — 4 tipos de chopp. Licor de doce de leite caseiro lendário. Coordenada corrigida (longe da anterior).", emoji:"🐻"},
+    {ordem:24, nome:"Gilmour Brewpub", endereco:"Av. Andrômeda, 880 - J. Satélite", coords:[-23.2220,-45.8896], chegada:"23:45", saida:"00:00", nota:5.0, reviews:3, sabado:"17:00-00:00", tipo:"Brewpub - Cervejas artesanais próprias", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Cerveja artesanal fabricada no local. 5.0 no TripAdvisor. ⚠️ FECHA EXATAMENTE À MEIA-NOITE — chegada pontualíssima! Coordenada corrigida.", emoji:"🎤", alerta:"⚠️ Fecha 00:00 — pontualidade!"},
+    {ordem:25, nome:"Hora Extra Bar & Adega", endereco:"Vila Ema, SJC (verificar endereço)", coords:[-23.1985,-45.8900], chegada:"00:05", saida:"00:20", nota:4.6, reviews:124, sabado:"17:00-00:00 (verificar)", tipo:"Bar & Adega", preco:"$$", bairro:"Vila Ema", bloco:"andromeda", zona:4, dica:"NOVO (substituiu Lanchão & Cia que tinha poucas reviews). Bar com adega selecionada, 4.6★ com 124 reviews. Boa opção pra vinhos e cervejas especiais. ⚠️ Confirmar endereço antes do evento.", emoji:"🍷"},
+    {ordem:26, nome:"Bar do Alemão", endereco:"Região sul de SJC (verificar endereço exato)", coords:[-23.2250,-45.8920], chegada:"00:25", saida:"00:40", nota:4.8, reviews:161, sabado:"Verificar", tipo:"Pub & Bar tradicional", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"NOVO (substituiu Yex Boliche com 3.8★). Avaliado como 'best bar in the southern region' — 4.8★ com 161 reviews. Boteco tradicional que combina com pub crawl. ⚠️ Confirmar endereço antes do evento.", emoji:"🍻"},
+    {ordem:27, nome:"🎉 GRAN FINALE — Bar Chaparral Boteco", endereco:"Av. Andrômeda, 2380 - J. Satélite", coords:[-23.2262,-45.8852], chegada:"00:45", saida:"01:15", nota:4.3, reviews:1500, sabado:"17:00-02:00", tipo:"Boteco com chapas + música ao vivo", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, finale:true, dica:"GRAN FINALE NA ANDRÔMEDA! O bar mais popular da região com 1.500+ reviews. Chapas mistas, petiscos pra compartilhar, música ao vivo. Fecha 2h, dá pra esticar até 1h+. Motivo da troca: Gilmour fecha 00:00, Chaparral fecha 02:00.", emoji:"🎉"}
   ],
   highlights: [
-    {emoji:"🎸", titulo:"Banda de Rock ao Vivo", descricao:"Fim da noite no Gilmour Brewpub com banda de rock e chopp artesanal fabricado no local."},
-    {emoji:"🌅", titulo:"Pôr do Sol no Buxixo", descricao:"Vista privilegiada do pôr do sol no banhado, no Buxixo Gastrobar (#18)."},
+    {emoji:"🍖", titulo:"Pausa Pro Almoço (60min)", descricao:"Parada longa no Bar Chaparral da Villa (Vila Ema) — costela assada e telão. A única pausa longa do dia."},
+    {emoji:"🎉", titulo:"Gran Finale na Andrômeda", descricao:"Encerramento épico no Bar Chaparral Boteco (Av. Andrômeda 2380) — 1.500+ reviews, fecha 2h, música ao vivo."},
     {emoji:"🏆", titulo:"O Mais Avaliado de SJC", descricao:"Bar Coronel abre o dia com 2.322 reviews e selo Travellers' Choice do TripAdvisor."},
-    {emoji:"🌶️", titulo:"Calabresa Apimentada", descricao:"Bar do Deis tem a calabresa apimentada lendária de SJC (#14)."},
-    {emoji:"🎯", titulo:"9 Paradas na Andrômeda", descricao:"A reta final é uma imersão total na Av. Andrômeda — coroa do pub crawl."}
+    {emoji:"🍺", titulo:"Bamberg Express (NOVO)", descricao:"4.7★ com 221 reviews. Cervejaria artesanal com chopp de qualidade. Substituiu o Bar do Tohru (que só abria 17h)."},
+    {emoji:"🥙", titulo:"O Mais Popular da Andrômeda", descricao:"Ponto da Esfiha (#19) com 893 reviews — custo-benefício imbatível."},
+    {emoji:"🗺️", titulo:"4 Zonas Marcadas no Mapa", descricao:"Roteiro dividido em 4 zonas visuais no mapa: Centro (amarelo) → Vila Ema almoço (laranja) → Noite (rosa) → Andrômeda final (roxo)."}
   ],
   blocos: {
-    centro: {titulo:"Bloco 1 — Centro", periodo:"11:00 às 14:20", cor:"#FCD34D"},
-    vila: {titulo:"Bloco 2 — Vila Ema + Vila Adyana", periodo:"14:30 às 17:15", cor:"#FB923C"},
-    dimas: {titulo:"Bloco 3 — São Dimas + Esplanada", periodo:"17:30 às 21:50", cor:"#F472B6"},
-    andromeda: {titulo:"Bloco 4 — Av. Andrômeda (GRAN FINALE)", periodo:"22:10 às 03:00", cor:"#A78BFA"}
+    centro: {titulo:"Zona 1 — Centro (manhã)", periodo:"11:00 às 12:30", cor:"#FCD34D"},
+    vila: {titulo:"Zona 2 — Vila Ema (almoço + noite)", periodo:"11:55 às 21:00", cor:"#FB923C"},
+    dimas: {titulo:"Zona 3 — São Dimas (noite)", periodo:"19:00 às 20:45", cor:"#F472B6"},
+    andromeda: {titulo:"Zona 4 — Av. Andrômeda (GRAN FINALE)", periodo:"20:50 às 01:15", cor:"#A78BFA"}
+  },
+  // Zonas geográficas (polígonos para o mapa)
+  zonas: {
+    1: { // Centro
+      cor: "#FCD34D",
+      bounds: [[-23.185, -45.886], [-23.185, -45.880], [-23.178, -45.880], [-23.178, -45.886]],
+      label: "Centro",
+      labelPos: [-23.1815, -45.883]
+    },
+    2: { // Vila Ema + Vila Adyana
+      cor: "#FB923C",
+      bounds: [[-23.212, -45.900], [-23.212, -45.888], [-23.185, -45.888], [-23.185, -45.915]],
+      label: "Vila Ema + Adyana",
+      labelPos: [-23.2000, -45.895]
+    },
+    3: { // São Dimas
+      cor: "#F472B6",
+      bounds: [[-23.210, -45.896], [-23.210, -45.881], [-23.190, -45.881], [-23.190, -45.896]],
+      label: "São Dimas",
+      labelPos: [-23.2010, -45.887]
+    },
+    4: { // Av. Andrômeda
+      cor: "#A78BFA",
+      bounds: [[-23.245, -45.896], [-23.245, -45.880], [-23.218, -45.880], [-23.218, -45.896]],
+      label: "Av. Andrômeda",
+      labelPos: [-23.2320, -45.885]
+    }
   }
 };
 
@@ -1146,7 +1197,7 @@ Object.entries(DADOS.blocos).forEach(([key, b]) => {
 });
 
 // ============== MAPA ==============
-const map = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView([-23.195, -45.885], 13);
+const map = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView([-23.205, -45.890], 13);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '© OpenStreetMap, © CARTO',
   maxZoom: 19
@@ -1155,7 +1206,30 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 map.on('click', () => map.scrollWheelZoom.enable());
 map.on('mouseout', () => map.scrollWheelZoom.disable());
 
-// Adiciona marcadores
+// Adiciona polígonos das zonas PRIMEIRO (para ficarem atrás dos pinos)
+Object.entries(DADOS.zonas).forEach(([id, zona]) => {
+  L.polygon(zona.bounds, {
+    color: zona.cor,
+    weight: 2,
+    opacity: 0.7,
+    fillColor: zona.cor,
+    fillOpacity: 0.12,
+    dashArray: '4, 6',
+    interactive: false
+  }).addTo(map);
+  // Label da zona
+  L.marker(zona.labelPos, {
+    icon: L.divIcon({
+      className: 'zona-label',
+      html: `<div class="zona-label-content" style="border-color:${zona.cor}; color:${zona.cor}">ZONA ${id} · ${zona.label}</div>`,
+      iconSize: [180, 30],
+      iconAnchor: [90, 15]
+    }),
+    interactive: false
+  }).addTo(map);
+});
+
+// Adiciona marcadores numerados
 const cores = {centro:'#FCD34D', vila:'#FB923C', dimas:'#F472B6', andromeda:'#A78BFA'};
 const latlngs = [];
 
@@ -1283,7 +1357,7 @@ const stats = [
   {num: '27', label: 'Bares Visitados'},
   {num: totalReviews.toLocaleString('pt-BR'), label: 'Reviews Combinadas'},
   {num: distTotal.toFixed(1) + ' km', label: 'A Pé no Total'},
-  {num: '16h', label: 'De Festa Contínua'},
+  {num: '14h', label: 'De Festa Contínua'},
   {num: '4', label: 'Blocos de Roteiro'},
   {num: '2.322', label: 'Reviews do Bar Coronel (#1)'}
 ];
@@ -1314,7 +1388,7 @@ function generateICS() {
   let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Pub Crawl SJC//PT-BR\n';
   ics += 'BEGIN:VEVENT\n';
   ics += 'DTSTART:20260627T110000\n';
-  ics += 'DTEND:20260628T030000\n';
+  ics += 'DTEND:20260628T011500\n';
   ics += 'SUMMARY:🍺 Pub Crawl São José dos Campos (27 bares)\n';
   ics += 'DESCRIPTION:Roteiro: Centro → Vila Ema → Vila Adyana → São Dimas → Av. Andrômeda. https://github.com/\n';
   ics += 'LOCATION:Centro, São José dos Campos - SP\n';
