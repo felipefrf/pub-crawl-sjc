@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍺 Pub Crawl São José dos Campos — 27/06/2026</title>
+<title>T27 Bares — 27/06/2026</title>
 <meta name="description" content="27 bares em 1 dia em São José dos Campos. Roteiro completo: Centro → Vila Ema → Vila Adyana → São Dimas → Av. Andrômeda.">
 
 <!-- Fonts -->
@@ -1015,7 +1015,7 @@ footer {
   <div class="hero-emoji-row">
     <span>🍺</span><span>🍻</span><span>🥂</span><span>🍹</span><span>🍸</span>
   </div>
-  <h1>Pub Crawl<br>São José dos Campos</h1>
+  <h1>T27<br>Bares</h1>
   <p class="subtitle">27 bares em <strong>1 dia épico</strong> — tudo a pé, sem carro 🚶</p>
   <div class="hero-date-badge">Sábado, 27 de Junho de 2026</div>
   
@@ -1085,7 +1085,7 @@ footer {
     <a class="share-btn" id="share-whatsapp" target="_blank" rel="noopener">📱 WhatsApp</a>
     <a class="share-btn" id="share-telegram" target="_blank" rel="noopener">✈️ Telegram</a>
     <button class="share-btn" id="share-copy">🔗 Copiar link</button>
-    <a class="share-btn" id="share-ics" download="pub-crawl-sjc.ics">📅 Salvar no calendário</a>
+    <a class="share-btn" id="share-ics" download="t27-bares.ics">📅 Salvar no calendário</a>
   </div>
   <div class="qr-section">
     <div class="qr-code" id="qrcode"></div>
@@ -1452,7 +1452,7 @@ const distTotal = DADOS.bares.reduce((s, b, i) => {
 
 // ============== SHARE ==============
 const url = window.location.href;
-const texto = '🍺 Pub Crawl São José dos Campos — 27 bares em 1 dia (27/06/2026). Bora?';
+const texto = '🍺 T27 Bares — 27 bares em 1 dia em SJC (27/06/2026). Bora?';
 document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(texto + ' ' + url)}`;
 document.getElementById('share-telegram').href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(texto)}`;
 document.getElementById('share-copy').onclick = () => {
@@ -1465,11 +1465,11 @@ document.getElementById('share-copy').onclick = () => {
 
 // ============== ICS CALENDAR ==============
 function generateICS() {
-  let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Pub Crawl SJC//PT-BR\n';
+  let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//T27 Bares//PT-BR\n';
   ics += 'BEGIN:VEVENT\n';
   ics += 'DTSTART:20260627T110000\n';
   ics += 'DTEND:20260628T014800\n';
-  ics += 'SUMMARY:🍺 Pub Crawl São José dos Campos (27 bares)\n';
+  ics += 'SUMMARY:🍺 T27 Bares — São José dos Campos (27 bares)\n';
   ics += 'DESCRIPTION:Roteiro: Centro → Vila Ema → Vila Adyana → São Dimas → Av. Andrômeda. https://felipefrf.github.io/pub-crawl-sjc/\n';
   ics += 'LOCATION:Centro, São José dos Campos - SP\n';
   ics += 'END:VEVENT\nEND:VCALENDAR';
