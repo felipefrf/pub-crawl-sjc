@@ -1050,6 +1050,9 @@ footer {
   <p class="section-sub">Do Centro até o coração da Av. Andrômeda — tudo a pé</p>
   <div class="map-legend" id="map-legend"></div>
   <div id="map"></div>
+<div id="map-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(11,16,32,0.92);color:#FCD34D;padding:1rem 1.5rem;border-radius:12px;font-family:'Fredoka',sans-serif;font-weight:600;z-index:1000;backdrop-filter:blur(8px);border:1px solid rgba(252,211,77,0.3);">
+  ⏳ Calculando rota real via OSRM...
+</div>
 </section>
 
 <!-- TIMELINE -->
@@ -1255,6 +1258,7 @@ Object.entries(DADOS.zonas).forEach(([id, zona]) => {
 // Adiciona marcadores numerados
 const cores = {centro:'#FCD34D', vila:'#FB923C', dimas:'#F472B6', andromeda:'#A78BFA'};
 const latlngs = [];
+const allRouteLines = []; // para fitBounds posterior
 
 DADOS.bares.forEach((bar, i) => {
   const cor = cores[bar.bloco];
@@ -1276,34 +1280,61 @@ DADOS.bares.forEach((bar, i) => {
   latlngs.push(bar.coords);
 });
 
-// Polyline da rota
-const rota = L.polyline(latlngs, {
-  color: '#A78BFA',
-  weight: 4,
-  opacity: 0.7,
-  dashArray: '8, 8',
-  smoothFactor: 1.5
-}).addTo(map);
-
-// Adiciona uma rota com cor por bloco
-let currentBloco = null;
-let segmento = [];
-DADOS.bares.forEach((bar, i) => {
-  if (bar.bloco !== currentBloco) {
-    if (segmento.length > 0) {
-      L.polyline(segmento, { color: cores[currentBloco], weight: 3, opacity: 0.6, dashArray: '6,6' }).addTo(map);
+// Adiciona rota real via OSRM (substitui linha reta)
+// Cada trecho usa geometria GeoJSON do OSRM (rota de ruas REAL)
+async function drawRealRoutes() {
+  const allCoords = [];
+  const loadingEl = document.getElementById('map-loading');
+  for (let i = 0; i < DADOS.bares.length - 1; i++) {
+    const origem = DADOS.bares[i];
+    const destino = DADOS.bares[i+1];
+    const lon1 = origem.coords[1], lat1 = origem.coords[0];
+    const lon2 = destino.coords[1], lat2 = destino.coords[0];
+    const url = `https://router.project-osrm.org/route/v1/walking/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
+    if (loadingEl) loadingEl.textContent = `⏳ Calculando rota real... ${i+1}/${DADOS.bares.length-1}`;
+    try {
+      const r = await fetch(url);
+      const data = await r.json();
+      if (data.code === 'Ok' && data.routes && data.routes[0].geometry.coordinates.length > 1) {
+        // OSRM retorna [lon, lat]; Leaflet quer [lat, lon]
+        const coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+        // Cor: usar a cor do bloco de ORIGEM
+        const cor = cores[origem.bloco] || '#A78BFA';
+        // Linha na cor do bloco; tracejada se for gap longo
+        const isGap = data.routes[0].distance > 2000;
+        const line = L.polyline(coords, {
+          color: cor,
+          weight: 5,
+          opacity: 0.9,
+          lineCap: 'round',
+          lineJoin: 'round',
+          dashArray: isGap ? '12, 10' : null
+        }).addTo(map);
+        allRouteLines.push(line);
+        coords.forEach(c => allCoords.push(c));
+      }
+    } catch (e) {
+      // Fallback: linha reta
+      const line = L.polyline([origem.coords, destino.coords], {
+        color: cores[origem.bloco] || '#A78BFA',
+        weight: 4,
+        opacity: 0.7,
+        dashArray: '4, 4'
+      }).addTo(map);
+      allRouteLines.push(line);
+      allCoords.push(origem.coords, destino.coords);
     }
-    currentBloco = bar.bloco;
-    segmento = [bar.coords];
-  } else {
-    segmento.push(bar.coords);
+    // Pausa para não sobrecarregar a API
+    await new Promise(r => setTimeout(r, 80));
   }
-});
-if (segmento.length > 0) {
-  L.polyline(segmento, { color: cores[currentBloco], weight: 3, opacity: 0.6, dashArray: '6,6' }).addTo(map);
+  if (loadingEl) loadingEl.style.display = 'none';
+  // Ajusta o zoom para mostrar toda a rota
+  if (allCoords.length > 0) {
+    const bounds = L.latLngBounds(allCoords);
+    map.fitBounds(bounds, {padding: [40, 40]});
+  }
 }
-
-map.fitBounds(rota.getBounds(), {padding: [40, 40]});
+drawRealRoutes().catch(console.error);
 
 // ============== TIMELINE ==============
 const tl = document.getElementById('timeline');
