@@ -1102,8 +1102,8 @@ footer {
 // ============== DADOS ==============
 // Ordem OTIMIZADA via Valhalla (costing=pedestrian) + Held-Karp + 2-opt + ILS
 // Valhalla é o ÚNICO router open source com rede de pedestre REAL
-// (OSRM público tem bug de aliasing de perfis)
-// Distância: 13.20km (vs 22.62km OSRM, -42%!) — pura caminhada de pedestre
+// (OSRM público tem bug de aliasing de perfis, por isso usamos Valhalla offline)
+// Distância: 13.20km — pura caminhada de pedestre, polylines pré-calculadas
 // Duração caminhada: 2h55min a 4.5 km/h (realista)
 const DADOS = {
   bares: [
@@ -1436,7 +1436,7 @@ const distTotal = DADOS.bares.reduce((s, b, i) => {
   const stats = [
     {num: '27', label: 'Bares Visitados'},
     {num: totalReviews.toLocaleString('pt-BR'), label: 'Reviews Combinadas'},
-    {id: 'distancia', num: '<span style="font-size:1.5rem">⌛ calculando</span>', label: 'A Pé (OSRM real)'},
+    {id: 'distancia', num: '13.2 km', label: 'A pé'},
     {num: '15h30', label: 'De Festa Contínua'},
     {num: '4', label: 'Blocos de Roteiro'},
     {num: '2.322', label: 'Reviews do Bar Coronel (#1)'}
