@@ -1016,7 +1016,7 @@ footer {
     <span>🍺</span><span>🍻</span><span>🥂</span><span>🍹</span><span>🍸</span>
   </div>
   <h1>Pub Crawl<br>São José dos Campos</h1>
-  <p class="subtitle">27 bares em <strong>1 dia épico</strong> — a pé, rota otimizada via Valhalla 🚶</p>
+  <p class="subtitle">27 bares em <strong>1 dia épico</strong> — tudo a pé, sem carro 🚶</p>
   <div class="hero-date-badge">Sábado, 27 de Junho de 2026</div>
   
   <div class="countdown" id="countdown">
@@ -1028,8 +1028,9 @@ footer {
 
   <div class="stats">
     <div class="stat-card"><span class="stat-icon">🍻</span><span class="stat-value">27</span><div class="stat-label">Bares</div></div>
-    <div class="stat-card"><span class="stat-icon">🚶</span><span class="stat-value" id="stat-km"><span style="font-size:0.9rem">⌛</span><span style="font-size:1rem">km</span></span><div class="stat-label">A pé (Valhalla)</div></div>
-    <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-value">11<span style="font-size:1rem">h</span></span><div class="stat-label">De festa</div></div>
+    <div class="stat-card"><span class="stat-icon">🚶</span><span class="stat-value">13.2<span style="font-size:1rem">km</span></span><div class="stat-label">A pé</div></div>
+  <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-value">2h55<span style="font-size:1rem">min</span></span><div class="stat-label">Só de caminhada</div></div>
+    <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-value">13<span style="font-size:1rem">h</span></span><div class="stat-label">De festa</div></div>
     <div class="stat-card"><span class="stat-icon">📍</span><span class="stat-value">6</span><div class="stat-label">Bairros</div></div>
     <div class="stat-card"><span class="stat-icon">⭐</span><span class="stat-value">11.7<span style="font-size:1rem">k</span></span><div class="stat-label">Reviews</div></div>
   </div>
@@ -1050,9 +1051,7 @@ footer {
   <p class="section-sub">Do Centro até o coração da Av. Andrômeda — tudo a pé</p>
   <div class="map-legend" id="map-legend"></div>
   <div id="map"></div>
-<div id="map-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(11,16,32,0.92);color:#FCD34D;padding:1rem 1.5rem;border-radius:12px;font-family:'Fredoka',sans-serif;font-weight:600;z-index:1000;backdrop-filter:blur(8px);border:1px solid rgba(252,211,77,0.3);">
-  ⏳ Calculando rota real via OSRM...
-</div>
+  <div id="map-loading" style="display:none;"></div>
 </section>
 
 <!-- TIMELINE -->
@@ -1093,7 +1092,6 @@ footer {
     <div class="qr-caption">Escaneie e abra a rota no Google Maps</div>
   </div>
   <div class="disclaimer">
-    <strong>ℹ️ Sobre a distância:</strong> Calculada via <strong>Valhalla</strong> (router open source com rede de PEDESTRE real). Cada trecho segue as calçadas/ruas reais de SJC. Valhalla é o ÚNICO router open source que tem rede de pedestre própria — o OSRM público tem bug de aliasing.<br>
     <strong>⚠️ Bares com horário apertado:</strong> 5 bares noturnos (Gilmour, Ponto da Esfiha, Ursu's, Obelisco, Bar do Maranhão) têm risco de estar fechados no horário do roteiro. Confirme antes do evento!<br>
     <strong>💡 Dica:</strong> Vá no seu ritmo — beba água, coma bem e não dirija. Se cansar, pule bares e vá direto pro Gran Finale na Av. Andrômeda.
   </div>
@@ -1148,7 +1146,7 @@ const DADOS = {
   highlights: [
     {emoji:"🍖", titulo:"Pausa Pro Almoço (60min)", descricao:"Parada longa no Bar Chaparral da Villa (Vila Ema) — costela assada e telão. A única pausa longa do dia."},
     {emoji:"🎉", titulo:"Gran Finale na Andrômeda", descricao:"Encerramento épico no Bar Chaparral Boteco (Av. Andrômeda 2380) — 1.500+ reviews, fecha 2h, música ao vivo."},
-    {emoji:"🚶", titulo:"Valhalla · 13.2km a pé", descricao:"Rota real de PEDESTRE calculada via Valhalla (único router open source com rede de pedestre real). OSRM público tem bug — retornava rotas de carro! 13.2km é o mínimo de caminhada pura."},
+    {emoji:"🚶", titulo:"Rota a pé · 13.2km", descricao:"Rota otimizada de pedestre: 13.2km a pé, 2h55min de caminhada. Cada trecho segue calçadas reais de SJC."},
     {emoji:"🌉", titulo:"Travessia do Rio Paraíba", descricao:"Entre o Pink Elephant (#12) e a Choperia Flor de Ypê (#13) há um gap de ~5km — única ponte entre São Dimas e J. Satélite."},
     {emoji:"🥙", titulo:"O Mais Popular da Andrômeda", descricao:"Ponto da Esfiha com 893 reviews — custo-benefício imbatível."},
     {emoji:"⚠️", titulo:"3 Bares com horário apertado", descricao:"Gilmour Brewpub, Ponto da Esfiha e Ursu's Bar podem estar FECHADOS no horário da madrugada. Considere reordenar se necessário."}
@@ -1267,6 +1265,10 @@ const cores = {centro:'#FCD34D', vila:'#FB923C', dimas:'#F472B6', andromeda:'#A7
 const latlngs = [];
 const allRouteLines = []; // para fitBounds posterior
 
+// SHAPES PRÉ-CALCULADAS via Valhalla (rede de pedestre real)
+// Polylines prontas — sem chamada async, sem loading
+const SHAPES_DATA = {"total_distance_m":13196.0,"total_time_s":10317.918,"total_distance_km":13.2,"total_time_min":172.0,"shapes":[{"de":1,"para":2,"distance_m":2307.0,"time_s":1744.4,"shape":"|}{ek@n_oovAbHiAnZ_FrB_@db@oHxc@{HjCe@lUgEdHoAz`AyNbLeCx\\uGn^cGxBrQnBfRl@vF|Efc@BXX|BdDfKhAbBdNnPpYj`@bL~M|FtGfP~QdOtPrUzWnt@r{@`BnBrW|\\z{@~`AfAlAtFlGj^~a@tGrHdC`BrKtKhDtDjEdCfg@fQlH~@nGRcAn@s@h@w@f@uAvAd@RnR|E~q@`MzQdCrXlDtA}AdB_ArDu@pf@NbWFbNsj@xv@Zrn@K"},{"de":2,"para":3,"distance_m":308.0,"time_s":279.0,"shape":"~q{fk@h|{ovAtvAWeHxXOp@wEtRwf@U"},{"de":3,"para":4,"distance_m":240.0,"time_s":211.3,"shape":"nq|fk@|i}ovAvf@TgQ`q@cBdHi@vBm@fCmCfLzMrD"},{"de":4,"para":5,"distance_m":182.0,"time_s":177.2,"shape":"pk}fk@v``pvA{MsDlCgLl@gCh@wBbBeH`t@jT"},{"de":5,"para":6,"distance_m":361.0,"time_s":275.0,"shape":"`|~fk@`r_pvA~m@~QoIxGrQfFpGhBpBv@e@|CcNtk@aD~MiHhZmNmE"},{"de":6,"para":7,"distance_m":229.0,"time_s":165.6,"shape":"dq_gk@tocpvAlNlEhHiZ`D_NbNuk@d@}Cb@L~RxF"},{"de":7,"para":8,"distance_m":217.0,"time_s":148.7,"shape":"ltagk@lbapvAxJrCxHxBlBj@jAiExKw`@xEsUiCcFUa@Kg@Ai@kA}IyB}K"},{"de":8,"para":9,"distance_m":195.0,"time_s":149.1,"shape":"zwbgk@|j~ovAeQk|@mKog@mBiJ"},{"de":9,"para":10,"distance_m":434.0,"time_s":321.4,"shape":"xuagk@vyzovAsJ}d@kV~BeP|AybAzJ{Isd@oo@hJmILm@M"},{"de":10,"para":11,"distance_m":493.0,"time_s":339.2,"shape":"pv{fk@hlyovAoDw@u@k@wAcAaCaDuAeDs@eFOgEV{Db@kDdAmCdBwC~C_CtFqCng@iKcJyc@a@mBeZjEiA{UbAgLhBuFxBmDnCoChOoGhXkC"},{"de":11,"para":12,"distance_m":470.0,"time_s":339.7,"shape":"zm}fk@patovAnaAgJ~OyEnCe@`l@yJ~TwDwHgm@JuGtC}C|\\oNtB{@vGoC"},{"de":12,"para":13,"distance_m":2543.0,"time_s":2036.4,"shape":"rncgk@~jpovAx`@oPvB}@fChFlLhTdGrLbDnCzCdBhNFlKqKpFmH`G}GbEqCjAy@rHw@TYl`@{c@`EdEbf@~f@rYf[rYzXfUtXzKvLts@`u@tFm@~IWnCuAn@IfOsHzp@gYnEiBzRgKbGiDpGwDxTqMlE_ClWeNj|@cd@fh@}T|KoDb[wJ~\\{JbJqEzMnP~Wr_@bY~`@lY`a@lX|^PTxOnXhD|EhDpIbBpN]lMaBuBqCsDeB_StClRb^pb@tObHjD`AyChAh@bBr@`BrCnAaBnDgFlLea@zb@}m@xs@"},{"de":13,"para":14,"distance_m":740.0,"time_s":612.8,"shape":"vo}gk@|uzovA|m@ys@da@{b@dJwDxEkAhe@mHx\\wInDpDjViWnDk@tDBbCPvEG`DY~Bu@dHb@hAX~AlAfClEf@aChAgBdAaA|B}@|\\?nJiGrh@cj@"},{"de":14,"para":15,"distance_m":286.0,"time_s":230.6,"shape":"nbhhk@xvtovAtLeMO}h@a@wB_NqOe@g@}B}A{Ac@mBQuCf@}DpEuKzLeWnY"},{"de":15,"para":16,"distance_m":455.0,"time_s":447.0,"shape":"tdfhk@ttsovAdWoYtK{L|DqEtImKhLqMjO}Pjd@ng@nD`EhMhNn@z@lH`IrFbGeUrU"},{"de":16,"para":17,"distance_m":306.0,"time_s":235.1,"shape":"lmjhk@jatovAdUsUz@`AhsAzyAtCrApI{J"},{"de":17,"para":18,"distance_m":287.0,"time_s":200.4,"shape":"`inhk@l~uovAqIzJqCbDY^{FnIz@Bv@b@b@n@d@dBGjDiiA|mAc@jFTn@"},{"de":18,"para":19,"distance_m":0.0,"time_s":0.0,"shape":"dlkhk@`~yovA??"},{"de":19,"para":20,"distance_m":198.0,"time_s":128.6,"shape":"dlkhk@`~yovAp@pBnDhEfKUjFUL~DIjBI`Ck@tEuj@hm@"},{"de":20,"para":21,"distance_m":491.0,"time_s":366.3,"shape":"ryjhk@~h|ovAtj@im@lDcD`D{Ez@oB~\\eBbBgAjVu@vPUxQvAfHtAlA^z]lOf]vNjEhArLzD"},{"de":21,"para":22,"distance_m":865.0,"time_s":661.3,"shape":"pkrhk@dr{ovAjJ|CbJ`DbRjGrOtGjK`Fnb@mf@nMwMrP_Q~NcFde@dBXkObA?ra@z@nb@f@zb@|@n@iVpa@bA|e@dBrAij@"},{"de":22,"para":23,"distance_m":669.0,"time_s":529.0,"shape":"pf~hk@p_xovA~CuqAae@o@ic@cArAiv@mlBeGCvFC~@b@|HzBPxHQh@@\\N\\^\\v@hDsCxR`@"},{"de":23,"para":24,"distance_m":0.0,"time_s":0.0,"shape":"dbzhk@d}sovA??"},{"de":24,"para":25,"distance_m":601.0,"time_s":485.6,"shape":"dbzhk@d}sovAyRa@iDrC]w@]_@]Oi@AyHP{BQc@}HB_AiNS}SQ{Uj@iPfAgTxCuMrDyM`EeLlD}UnK_NrIkKpIaLrK_Zs\\kLaR"},{"de":25,"para":26,"distance_m":180.0,"time_s":134.9,"shape":"bbqhk@ngtovA{GuKkC}DqAeCrFiFlTgN`RqLtIyDqA{C"},{"de":26,"para":27,"distance_m":139.0,"time_s":99.3,"shape":"pjrhk@zarovApAzCrM}GlN_GgAnDWzAv@tCrWkI"}]};
+
 DADOS.bares.forEach((bar, i) => {
   const cor = cores[bar.bloco];
   const icon = L.divIcon({
@@ -1287,8 +1289,8 @@ DADOS.bares.forEach((bar, i) => {
   latlngs.push(bar.coords);
 });
 
-// Adiciona rota real via Valhalla (rede de pedestre REAL)
-// Valhalla usa polyline6 encoded (precision 1e-6) — implementação inline do decoder
+// Adiciona rota pré-calculada via Valhalla (rede de pedestre REAL)
+// Polyline6 decoder inline (precision 1e-6)
 function decodePolyline6(str, precision) {
   precision = precision || 1e-6;
   let index = 0, lat = 0, lng = 0, coordinates = [];
@@ -1314,44 +1316,20 @@ function decodePolyline6(str, precision) {
   return coordinates;
 }
 
-async function drawRealRoutes() {
+function drawRealRoutes() {
+  // Polylines PRÉ-CALCULADAS (sem chamada async, renderiza instantaneamente)
   const allCoords = [];
-  const loadingEl = document.getElementById('map-loading');
-  for (let i = 0; i < DADOS.bares.length - 1; i++) {
-    const origem = DADOS.bares[i];
-    const destino = DADOS.bares[i+1];
-    if (loadingEl) loadingEl.textContent = `⏳ Calculando rota de pedestre (Valhalla)... ${i+1}/${DADOS.bares.length-1}`;
-    const json = {
-      locations: [
-        {lat: origem.coords[0], lon: origem.coords[1]},
-        {lat: destino.coords[0], lon: destino.coords[1]}
-      ],
-      costing: 'pedestrian',
-      directions_options: {units: 'kilometers'}
-    };
-    let coords = null;
-    let distance = 0;
-    try {
-      const r = await fetch('https://valhalla1.openstreetmap.de/route', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(json)
-      });
-      const data = await r.json();
-      if (data.trip && data.trip.legs && data.trip.legs[0]) {
-        distance = data.trip.legs[0].distance * 1000; // km → m
-        if (data.trip.legs[0].shape) {
-          // Valhalla retorna polyline6 encoded
-          const decoded = decodePolyline6(data.trip.legs[0].shape, 1e-6);
-          coords = decoded.map(c => [c[0], c[1]]); // [lat, lon] pra Leaflet
-        }
-      }
-    } catch (e) {}
-    if (!coords || coords.length < 2) {
-      coords = [origem.coords, destino.coords]; // fallback linha reta
+  SHAPES_DATA.shapes.forEach(leg => {
+    const origem = DADOS.bares[leg.de - 1];
+    let coords;
+    if (leg.shape && leg.shape !== '??' && leg.shape.length > 5) {
+      const decoded = decodePolyline6(leg.shape, 1e-6);
+      coords = decoded.map(c => [c[0], c[1]]);
+    } else {
+      coords = [origem.coords, DADOS.bares[leg.para - 1].coords];
     }
     const cor = cores[origem.bloco] || '#A78BFA';
-    const isGap = distance > 1500;
+    const isGap = leg.distance_m > 1500;
     const line = L.polyline(coords, {
       color: cor,
       weight: 5,
@@ -1362,15 +1340,20 @@ async function drawRealRoutes() {
     }).addTo(map);
     allRouteLines.push(line);
     coords.forEach(c => allCoords.push(c));
-    await new Promise(r => setTimeout(r, 100));
-  }
+  });
+  // Atualizar stats finais com a distância pré-calculada
+  const statsKm = document.getElementById('final-stat-km');
+  if (statsKm) statsKm.textContent = SHAPES_DATA.total_distance_km + ' km';
+  // Esconder loading
+  const loadingEl = document.getElementById('map-loading');
   if (loadingEl) loadingEl.style.display = 'none';
+  // Ajustar zoom
   if (allCoords.length > 0) {
     const bounds = L.latLngBounds(allCoords);
     map.fitBounds(bounds, {padding: [40, 40]});
   }
 }
-drawRealRoutes().catch(console.error);
+drawRealRoutes();
 
 // ============== TIMELINE ==============
 const tl = document.getElementById('timeline');
@@ -1440,59 +1423,7 @@ DADOS.bares.forEach((b, i) => {
   `);
 });
 
-// ============== ATUALIZAR STATS HERO (km dinâmico via Valhalla) ==============
-// Valhalla é o ÚNICO router open source com rede de pedestre REAL.
-// OSRM público tem bug de aliasing de perfis (retorna rota de carro).
-async function calcDistValhalla(c1, c2) {
-  const json = {
-    locations: [
-      {lat: c1[0], lon: c1[1]},
-      {lat: c2[0], lon: c2[1]}
-    ],
-    costing: 'pedestrian',
-    directions_options: {units: 'kilometers'}
-  };
-  try {
-    const r = await fetch('https://valhalla1.openstreetmap.de/route', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(json)
-    });
-    const data = await r.json();
-    if (data.trip && data.trip.legs && data.trip.legs[0]) {
-      return data.trip.legs[0].distance * 1000; // km → m
-    }
-  } catch (e) {}
-  return null;
-}
-
-async function calcTotalValhalla() {
-  const heroKm = document.getElementById('stat-km');
-  if (heroKm) heroKm.innerHTML = '<span style="font-size:0.9rem">⌛</span>';
-  let total = 0;
-  let count = 0;
-  for (let i = 1; i < DADOS.bares.length; i++) {
-    const d = await calcDistValhalla(DADOS.bares[i-1].coords, DADOS.bares[i].coords);
-    if (d != null) {
-      total += d;
-      count++;
-      if (heroKm && count % 4 === 0) {
-        heroKm.innerHTML = `${(total/1000).toFixed(1)}<span style="font-size:1rem">km</span>`;
-      }
-    }
-    await new Promise(r => setTimeout(r, 60));
-  }
-  if (heroKm) {
-    heroKm.innerHTML = `${(total/1000).toFixed(1)}<span style="font-size:1rem">km</span>`;
-  }
-  window.__distTotalReal = total;
-  const statsKm = document.getElementById('final-stat-km');
-  if (statsKm) {
-    statsKm.textContent = `${(total/1000).toFixed(1)} km`;
-  }
-  return total;
-}
-calcTotalValhalla().catch(() => {});
+// ============== ATUALIZAR STATS FINAIS ==============
 
 // ============== STATS FINAIS ==============
 const fs = document.getElementById('final-stats');
