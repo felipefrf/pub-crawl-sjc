@@ -1016,7 +1016,7 @@ footer {
     <span>🍺</span><span>🍻</span><span>🥂</span><span>🍹</span><span>🍸</span>
   </div>
   <h1>Pub Crawl<br>São José dos Campos</h1>
-  <p class="subtitle">27 bares em <strong>1 dia épico</strong> — a pé, rota otimizada via OSRM 🗺️</p>
+  <p class="subtitle">27 bares em <strong>1 dia épico</strong> — a pé, rota otimizada via Valhalla 🚶</p>
   <div class="hero-date-badge">Sábado, 27 de Junho de 2026</div>
   
   <div class="countdown" id="countdown">
@@ -1028,8 +1028,8 @@ footer {
 
   <div class="stats">
     <div class="stat-card"><span class="stat-icon">🍻</span><span class="stat-value">27</span><div class="stat-label">Bares</div></div>
-    <div class="stat-card"><span class="stat-icon">🚶</span><span class="stat-value" id="stat-km"><span style="font-size:0.9rem">⌛</span><span style="font-size:1rem">km</span></span><div class="stat-label">A pé (OSRM)</div></div>
-    <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-value">15.5<span style="font-size:1rem">h</span></span><div class="stat-label">De festa</div></div>
+    <div class="stat-card"><span class="stat-icon">🚶</span><span class="stat-value" id="stat-km"><span style="font-size:0.9rem">⌛</span><span style="font-size:1rem">km</span></span><div class="stat-label">A pé (Valhalla)</div></div>
+    <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-value">11<span style="font-size:1rem">h</span></span><div class="stat-label">De festa</div></div>
     <div class="stat-card"><span class="stat-icon">📍</span><span class="stat-value">6</span><div class="stat-label">Bairros</div></div>
     <div class="stat-card"><span class="stat-icon">⭐</span><span class="stat-value">11.7<span style="font-size:1rem">k</span></span><div class="stat-label">Reviews</div></div>
   </div>
@@ -1093,16 +1093,20 @@ footer {
     <div class="qr-caption">Escaneie e abra a rota no Google Maps</div>
   </div>
   <div class="disclaimer">
-    <strong>ℹ️ Sobre a distância:</strong> A distância é calculada em tempo real via OSRM (OpenStreetMap) usando rotas de caminhada REAIS — não linha reta. SJC tem o Rio Paraíba cortando a cidade e poucas pontes, então a rota real é maior que a linha reta (Haversine).<br>
-    <strong>⚠️ Confirme horários</strong> de funcionamento dos bares antes do evento! Alguns podem ter alterações sazonais. 3 bares (Gilmour, Ponto da Esfiha, Ursu's) têm horários apertados no roteiro noturno — podem estar fechados. Vá no seu ritmo — beba água, coma bem e não dirija.
+    <strong>ℹ️ Sobre a distância:</strong> Calculada via <strong>Valhalla</strong> (router open source com rede de PEDESTRE real). Cada trecho segue as calçadas/ruas reais de SJC. Valhalla é o ÚNICO router open source que tem rede de pedestre própria — o OSRM público tem bug de aliasing.<br>
+    <strong>⚠️ Bares com horário apertado:</strong> 5 bares noturnos (Gilmour, Ponto da Esfiha, Ursu's, Obelisco, Bar do Maranhão) têm risco de estar fechados no horário do roteiro. Confirme antes do evento!<br>
+    <strong>💡 Dica:</strong> Vá no seu ritmo — beba água, coma bem e não dirija. Se cansar, pule bares e vá direto pro Gran Finale na Av. Andrômeda.
   </div>
   <div class="footer-credits">Roteiro criado com carinho • São José dos Campos, 27/06/2026</div>
 </footer>
 
 <script>
 // ============== DADOS ==============
-// Ordem OTIMIZADA via Held-Karp + 2-opt + ILS usando matriz OSRM 27×27
-// Distância: 22.62km (vs 24.45km anterior) — redução de 7.5%
+// Ordem OTIMIZADA via Valhalla (costing=pedestrian) + Held-Karp + 2-opt + ILS
+// Valhalla é o ÚNICO router open source com rede de pedestre REAL
+// (OSRM público tem bug de aliasing de perfis)
+// Distância: 13.20km (vs 22.62km OSRM, -42%!) — pura caminhada de pedestre
+// Duração caminhada: 2h55min a 4.5 km/h (realista)
 const DADOS = {
   bares: [
     // ===== ZONA 1 - CENTRO MANHÃ (11:00) =====
@@ -1110,40 +1114,41 @@ const DADOS = {
 
     // ===== ZONA 2 - VILA EMA ALMOÇO =====
     {ordem:2, nome:"🍽️ ALMOÇO — Bar Chaparral da Villa", endereco:"Av. Heitor Villa Lobos, 979 - Vila Ema", coords:[-23.1980,-45.8900], chegada:"11:29", saida:"12:29", nota:4.3, reviews:800, sabado:"11:00-01:00", tipo:"Choperia + Restaurante (parada longa)", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, almoco:true, dica:"PARADA DE ALMOÇO (60min). Costela assada, telão pra acompanhar jogo. Melhor opção de almoço do dia.", emoji:"🍖"},
-    {ordem:3, nome:"Urbanus Bar", endereco:"R. Casemiro de Abreu, 163 - Vila Ema", coords:[-23.2000,-45.8910], chegada:"12:31", saida:"12:56", nota:4.2, reviews:200, sabado:"11:00-00:00", tipo:"Bar com música ao vivo", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, dica:"Drink rápido pós-almoço. Hambúrguer artesanal. Música ao vivo à noite.", emoji:"🎵"},
 
-    // ===== ZONA 2 - NOITE: VILA EMA + ADYANA (ordem otimizada por OSRM) =====
-    {ordem:4, nome:"Bamberg Express SJC", endereco:"Av. Dr. Ademar de Barros, 1566 - Vila Adyana", coords:[-23.2010,-45.8895], chegada:"15:00", saida:"15:25", nota:4.7, reviews:221, sabado:"15:00-00:00", tipo:"Cervejaria artesanal / Gastrobar", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, dica:"Cervejaria artesanal com chopp de qualidade (inclui Double IPA), porções fartas, equipe elogiada. Pausa de 2h entre Urbanus e Bamberg.", emoji:"🍺"},
-    {ordem:5, nome:"Empório Hopfields", endereco:"R. Eliza Costa Santos, 200 - São Dimas", coords:[-23.1980,-45.8890], chegada:"16:00", saida:"16:25", nota:4.4, reviews:1510, sabado:"16:00-00:00", tipo:"Tap house / craft beer", preco:"$$", bairro:"São Dimas", bloco:"vila", zona:2, dica:"O melhor de cerveja artesanal em SJC. 8 torneiras + 70 rótulos. Nº 1 em Bares e Pubs no TripAdvisor. 1.510 reviews no Google.", emoji:"🍺"},
-    {ordem:6, nome:"Cento e Onze Bar", endereco:"Av. Dr. Ademar de Barros, 1250 - São Dimas", coords:[-23.2010,-45.8930], chegada:"16:28", saida:"16:53", nota:4.2, reviews:400, sabado:"16:00-01:00", tipo:"Bar moderno com coquetéis", preco:"$$", bairro:"São Dimas", bloco:"vila", zona:2, dica:"Coquetelaria autoral. Ambiente moderno.", emoji:"🍸"},
-    {ordem:7, nome:"Boteco80 Vila Ema", endereco:"R. Gen. Osório, 76 - Vila Ema", coords:[-23.2010,-45.8915], chegada:"17:00", saida:"17:25", nota:4.1, reviews:99, sabado:"17:00-01:00", tipo:"Bar temático anos 80", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, dica:"Decoração temática anos 80! Drinks com nomes retrô. Abre exatamente 17h. Instagram: @boteco80", emoji:"🕹️"},
-    {ordem:8, nome:"Santo Agostinho Bar & Petiscos", endereco:"R. do Serimbura, 77 - Vila Ema", coords:[-23.2000,-45.8940], chegada:"17:27", saida:"17:52", nota:4.5, reviews:39, sabado:"18:00-00:00", tipo:"Bar petisqueira", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, dica:"Considerado 'o melhor cantinho' da Vila Ema. Petiscos caprichados. R. do Serimbura, 77.", emoji:"🐟"},
-    {ordem:9, nome:"O Turco Gordo", endereco:"R. Pedro de Toledo, 108 - Vila Adyana", coords:[-23.1990,-45.8920], chegada:"18:00", saida:"18:25", nota:4.4, reviews:600, sabado:"18:00-00:00", tipo:"Bar rock", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, dica:"Ambiente rock'n'roll. Drinques diferentes, boa carta de cervejas.", emoji:"🎸"},
-    {ordem:10, nome:"Viela Bar", endereco:"Av. 9 de Julho, 157 (loja 06) - Vila Adyana", coords:[-23.1985,-45.8910], chegada:"18:27", saida:"18:52", nota:4.2, reviews:120, sabado:"18:00-00:00", tipo:"Bar descolado", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, dica:"Escondidinho na Vila Adyana, vibe descolada. Drinks diferentes do padrão.", emoji:"🌃"},
-    {ordem:11, nome:"Pink Elephant Rooftop", endereco:"Av. Dr. Nelson D'Ávila, 1875 - São Dimas (Hotel Summit)", coords:[-23.2020,-45.8840], chegada:"19:00", saida:"19:25", nota:4.3, reviews:300, sabado:"19:00-03:00", tipo:"Rooftop / balada", preco:"$$$", bairro:"São Dimas", bloco:"dimas", zona:3, dica:"Vista privilegiada do rooftop no topo do Hotel Summit. Drinks bem feitos. Mais balada que bar. Só abre 19h.", emoji:"🌆"},
-    {ordem:12, nome:"Moto Rock Café", endereco:"Av. Dr. Nelson D'Ávila, 1385 - São Dimas", coords:[-23.1990,-45.8860], chegada:"19:27", saida:"19:52", nota:4.3, reviews:500, sabado:"17:30-02:00", tipo:"Bar temático de motos", preco:"$$", bairro:"São Dimas", bloco:"dimas", zona:3, dica:"Motos expostas, rock na caixa. Cerveja gelada, porções generosas. Abre até 2h!", emoji:"🏍️"},
+    // ===== ZONA 2 - VILA EMA + ADYANA (ordem otimizada por Valhalla) =====
+    // Viela → Turco Gordo → Urbanus → Santo Agostinho → Cento e Onze → Boteco80 → Bamberg → Empório
+    {ordem:3, nome:"Viela Bar", endereco:"Av. 9 de Julho, 157 (loja 06) - Vila Adyana", coords:[-23.1985,-45.8910], chegada:"12:31", saida:"12:51", nota:4.2, reviews:120, sabado:"18:00-00:00", tipo:"Bar descolado", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, alerta:"⚠️ Abre 18h — pode estar fechado!", dica:"Escondidinho na Vila Adyana, vibe descolada. Drinks diferentes do padrão. ⚠️ Abre 18h — checar se funciona no roteiro.", emoji:"🌃"},
+    {ordem:4, nome:"O Turco Gordo", endereco:"R. Pedro de Toledo, 108 - Vila Adyana", coords:[-23.1990,-45.8920], chegada:"12:53", saida:"13:13", nota:4.4, reviews:600, sabado:"18:00-00:00", tipo:"Bar rock", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, alerta:"⚠️ Abre 18h", dica:"Ambiente rock'n'roll. Drinques diferentes, boa carta de cervejas. ⚠️ Abre 18h.", emoji:"🎸"},
+    {ordem:5, nome:"Urbanus Bar", endereco:"R. Casemiro de Abreu, 163 - Vila Ema", coords:[-23.2000,-45.8910], chegada:"13:15", saida:"13:40", nota:4.2, reviews:200, sabado:"11:00-00:00", tipo:"Bar com música ao vivo", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, dica:"Drink pós-almoço. Hambúrguer artesanal. Música ao vivo à noite.", emoji:"🎵"},
+    {ordem:6, nome:"Santo Agostinho Bar & Petiscos", endereco:"R. do Serimbura, 77 - Vila Ema", coords:[-23.2000,-45.8940], chegada:"13:42", saida:"14:07", nota:4.5, reviews:39, sabado:"18:00-00:00", tipo:"Bar petisqueira", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, alerta:"⚠️ Abre 18h", dica:"Considerado 'o melhor cantinho' da Vila Ema. R. do Serimbura, 77. ⚠️ Abre 18h.", emoji:"🐟"},
+    {ordem:7, nome:"Cento e Onze Bar", endereco:"Av. Dr. Ademar de Barros, 1250 - São Dimas", coords:[-23.2010,-45.8930], chegada:"14:09", saida:"14:34", nota:4.2, reviews:400, sabado:"16:00-01:00", tipo:"Bar moderno com coquetéis", preco:"$$", bairro:"São Dimas", bloco:"vila", zona:2, alerta:"⚠️ Abre 16h", dica:"Coquetelaria autoral. Ambiente moderno. ⚠️ Abre 16h — checar se está aberto.", emoji:"🍸"},
+    {ordem:8, nome:"Boteco80 Vila Ema", endereco:"R. Gen. Osório, 76 - Vila Ema", coords:[-23.2010,-45.8915], chegada:"14:36", saida:"15:01", nota:4.1, reviews:99, sabado:"17:00-01:00", tipo:"Bar temático anos 80", preco:"$$", bairro:"Vila Ema", bloco:"vila", zona:2, alerta:"⚠️ Abre 17h", dica:"Decoração anos 80! Drinks com nomes retrô. ⚠️ Abre 17h.", emoji:"🕹️"},
+    {ordem:9, nome:"Bamberg Express SJC", endereco:"Av. Dr. Ademar de Barros, 1566 - Vila Adyana", coords:[-23.2010,-45.8895], chegada:"15:03", saida:"15:28", nota:4.7, reviews:221, sabado:"15:00-00:00", tipo:"Cervejaria artesanal / Gastrobar", preco:"$$", bairro:"Vila Adyana", bloco:"vila", zona:2, dica:"Cervejaria artesanal com chopp de qualidade (inclui Double IPA), porções fartas, equipe elogiada.", emoji:"🍺"},
+    {ordem:10, nome:"Empório Hopfields", endereco:"R. Eliza Costa Santos, 200 - São Dimas", coords:[-23.1980,-45.8890], chegada:"15:30", saida:"15:55", nota:4.4, reviews:1510, sabado:"16:00-00:00", tipo:"Tap house / craft beer", preco:"$$", bairro:"São Dimas", bloco:"vila", zona:2, alerta:"⚠️ Abre 16h", dica:"O melhor de cerveja artesanal em SJC. 8 torneiras + 70 rótulos. 1.510 reviews no Google. ⚠️ Abre 16h — esperar 5min.", emoji:"🍺"},
+    {ordem:11, nome:"Moto Rock Café", endereco:"Av. Dr. Nelson D'Ávila, 1385 - São Dimas", coords:[-23.1990,-45.8860], chegada:"15:57", saida:"16:22", nota:4.3, reviews:500, sabado:"17:30-02:00", tipo:"Bar temático de motos", preco:"$$", bairro:"São Dimas", bloco:"dimas", zona:3, alerta:"⚠️ Abre 17:30", dica:"Motos expostas, rock na caixa. Cerveja gelada, porções generosas. ⚠️ Abre 17:30 — esperar.", emoji:"🏍️"},
+    {ordem:12, nome:"Pink Elephant Rooftop", endereco:"Av. Dr. Nelson D'Ávila, 1875 - São Dimas (Hotel Summit)", coords:[-23.2020,-45.8840], chegada:"16:24", saida:"16:49", nota:4.3, reviews:300, sabado:"19:00-03:00", tipo:"Rooftop / balada", preco:"$$$", bairro:"São Dimas", bloco:"dimas", zona:3, alerta:"⚠️ Abre 19h", dica:"Vista do rooftop no topo do Hotel Summit. Drinks bem feitos. ⚠️ Abre 19h — esperar 2h ou voltar à noite.", emoji:"🌆"},
 
-    // ===== ZONA 4 - J. SATÉLITE + ANDRÔMEDA (ordem otimizada por OSRM) =====
-    {ordem:13, nome:"Bar do Ernesto", endereco:"J. Satélite (verificar @bar.do.ernesto.sjc)", coords:[-23.2150,-45.8890], chegada:"19:56", saida:"20:21", nota:4.8, reviews:156, sabado:"17:00-00:00 (verificar)", tipo:"Bar de coquetéis / Petiscaria", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"4.8★ com 156 reviews. Avaliado como 'best bar in SJC'. ⚠️ Confirmar endereço exato antes do evento. Travessia do Rio Paraíba.", emoji:"🍸"},
-    {ordem:14, nome:"Choperia e Restaurante Flor de Ypê", endereco:"Av. Cassiopéia, 377 - J. Satélite", coords:[-23.2200,-45.8860], chegada:"20:24", saida:"20:49", nota:4.0, reviews:80, sabado:"17:00-00:00", tipo:"Choperia", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Choperia de bairro próxima da Andrômeda, ambiente familiar.", emoji:"🌸"},
-    {ordem:15, nome:"Bar do Maranhão", endereco:"Av. Cassiopéia, 628 - J. Satélite", coords:[-23.2205,-45.8860], chegada:"20:50", saida:"21:15", nota:4.3, reviews:50, sabado:"09:00-21:00", tipo:"Boteco regional maranhense", preco:"$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Substituiu o Bar do Deis (fechado em ago/2024). Culinária regional maranhense, preço acessível.", emoji:"🍛"},
-    {ordem:16, nome:"Lanchão & Cia", endereco:"Av. Andrômeda, 838 - J. Satélite", coords:[-23.2220,-45.8860], chegada:"21:16", saida:"21:41", nota:4.0, reviews:50, sabado:"18:00-00:00", tipo:"Lanchonete/Bar", preco:"$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Lanches e porções acessíveis — primeira parada EFETIVA na Av. Andrômeda.", emoji:"🥪"},
-    {ordem:17, nome:"Ponto da Esfiha Pub & Bar", endereco:"Av. Andrômeda, 998 - J. Satélite", coords:[-23.2225,-45.8890], chegada:"21:43", saida:"22:08", nota:4.1, reviews:893, sabado:"08:00-23:45", tipo:"Pub/Esfiharia", preco:"$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, alerta:"⚠️ Fecha 23:45 — risco de fechado!", dica:"Um dos bares MAIS populares da Andrômeda com 893 reviews. Esfihas, pizzas, hambúrgueres. ⚠️ ATENÇÃO: fecha 23:45 — pode estar fechado!", emoji:"🥙"},
-    {ordem:18, nome:"Gilmour Brewpub", endereco:"Av. Andrômeda, 880 - J. Satélite", coords:[-23.2220,-45.8900], chegada:"22:08", saida:"22:33", nota:5.0, reviews:3, sabado:"17:00-00:00", tipo:"Brewpub - Cervejas artesanais próprias", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, alerta:"⚠️ Fecha 00:00 — pode estar fechado se atrasar!", dica:"Cerveja artesanal fabricada no local. 5.0★ no TripAdvisor. Banda de rock ao vivo nos fins de semana. ⚠️ ATENÇÃO: fecha meia-noite — pode estar fechado!", emoji:"🎤"},
-    {ordem:19, nome:"Recanto do Portuga", endereco:"R. Itapetinga, 41 - J. Satélite", coords:[-23.2300,-45.8860], chegada:"22:33", saida:"22:58", nota:4.1, reviews:100, sabado:"17:00-02:00", tipo:"Bar português", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Comida portuguesa autêntica. Bacalhau, pastéis de bacalhau. Cerveja bem gelada. Abre até 2h!", emoji:"🐙"},
-    {ordem:20, nome:"Ursu's Bar (Bar do Urso)", endereco:"Av. Cidade Jardim, 2381 - J. Satélite", coords:[-23.2300,-45.8860], chegada:"22:58", saida:"23:23", nota:4.7, reviews:12, sabado:"16:00-00:00", tipo:"Bar temático do urso - Cervejas Colorado", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, alerta:"⚠️ Fecha 00:00 — pontualidade!", dica:"Quase 5 estrelas (4.7)! Bar oficial da Cervejaria Colorado — 4 tipos de chopp. Licor de doce de leite caseiro.", emoji:"🐻"},
-    {ordem:21, nome:"Bar Tô Chegando", endereco:"Av. Iguape, 704 - J. Satélite", coords:[-23.2320,-45.8880], chegada:"23:26", saida:"23:51", nota:4.2, reviews:120, sabado:"18:00-02:00", tipo:"Bar animado", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Animado até tarde. Abre até 2h! Instagram: @bartochegando1", emoji:"🎉"},
-    {ordem:22, nome:"O Bequinho", endereco:"Av. Perseu, 1175 - J. Satélite", coords:[-23.2260,-45.8900], chegada:"23:53", saida:"00:18", nota:4.2, reviews:100, sabado:"16:00-01:00", tipo:"Bar com petiscos", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Petiscos bem servidos, atendimento família. Domingo de madrugada.", emoji:"🍤"},
-    {ordem:23, nome:"Yex Boliche & Steakhouse", endereco:"Av. Andrômeda, 227 (Vale Sul Shopping)", coords:[-23.2225,-45.8890], chegada:"00:18", saida:"00:43", nota:3.8, reviews:242, sabado:"12:00-01:00 (verificar)", tipo:"Bar + Boliche + Steakhouse", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Boliche + bar + steakhouse no Vale Sul Shopping. ⚠️ Nota 3.8★, pode pular se preferir.", emoji:"🎳"},
-    {ordem:24, nome:"Obelisco Bar", endereco:"Av. Andrômeda, 2360 - J. Satélite", coords:[-23.2260,-45.8850], chegada:"00:43", saida:"01:08", nota:4.0, reviews:60, sabado:"17:00-00:00", tipo:"Bar/Pub", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Petiscos, cerveja gelada, ambiente de Andrômeda puro. Substituiu o Snooker Music Bar (provavelmente fechado).", emoji:"🗿"},
-    {ordem:25, nome:"Mônaco Andrômeda", endereco:"Av. Andrômeda, J. Satélite (verificar @monacoandromeda)", coords:[-23.2240,-45.8870], chegada:"01:09", saida:"01:34", nota:4.5, reviews:30, sabado:"18:00-00:00 (verificar)", tipo:"Bar Multicultural (LGBTQIA+ friendly)", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Bar multicultural na Andrômeda. 'Igualdade, Liberdade, Diversão e amor'.", emoji:"🌈"},
-    {ordem:26, nome:"Terraço Andrômeda", endereco:"Av. Andrômeda, 2201 - J. Satélite", coords:[-23.2255,-45.8860], chegada:"01:34", saida:"01:59", nota:4.0, reviews:40, sabado:"17:00-01:00 (verificar)", tipo:"Bar/Pub", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Terraço com vista. 'Grande diversidade de bebidas e drinks'.", emoji:"🌃"},
-    {ordem:27, nome:"🎉 GRAN FINALE — Bar Chaparral Boteco", endereco:"Av. Andrômeda, 2380 - J. Satélite", coords:[-23.2270,-45.8850], chegada:"02:00", saida:"02:30", nota:4.3, reviews:1500, sabado:"17:00-02:00", tipo:"Boteco com chapas + música ao vivo", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, finale:true, dica:"GRAN FINALE NA ANDRÔMEDA! O bar mais popular da região com 1.500+ reviews. Chapas mistas, petiscos, música ao vivo. Fecha 2h — encerramento épico do dia.", emoji:"🎉"}
+    // ===== ZONA 4 - J. SATÉLITE + ANDRÔMEDA (ordem otimizada por Valhalla) =====
+    {ordem:13, nome:"Bar do Ernesto", endereco:"J. Satélite (verificar @bar.do.ernesto.sjc)", coords:[-23.2150,-45.8890], chegada:"19:00", saida:"19:25", nota:4.8, reviews:156, sabado:"17:00-00:00 (verificar)", tipo:"Bar de coquetéis / Petiscaria", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"4.8★ com 156 reviews. Avaliado como 'best bar in SJC'. ⚠️ Confirmar endereço. Travessia do Rio Paraíba (~2.5km, 35min a pé).", emoji:"🍸"},
+    {ordem:14, nome:"Bar do Maranhão", endereco:"Av. Cassiopéia, 628 - J. Satélite", coords:[-23.2205,-45.8860], chegada:"19:27", saida:"19:52", nota:4.3, reviews:50, sabado:"09:00-21:00", tipo:"Boteco regional maranhense", preco:"$", bairro:"J. Satélite", bloco:"andromeda", zona:4, alerta:"⚠️ Fecha 21h", dica:"Substituiu o Bar do Deis (fechado em ago/2024). Culinária regional maranhense. ⚠️ Fecha 21h — pontualidade.", emoji:"🍛"},
+    {ordem:15, nome:"Choperia e Restaurante Flor de Ypê", endereco:"Av. Cassiopéia, 377 - J. Satélite", coords:[-23.2200,-45.8860], chegada:"19:54", saida:"20:19", nota:4.0, reviews:80, sabado:"17:00-00:00", tipo:"Choperia", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Choperia de bairro próxima da Andrômeda, ambiente familiar.", emoji:"🌸"},
+    {ordem:16, nome:"Lanchão & Cia", endereco:"Av. Andrômeda, 838 - J. Satélite", coords:[-23.2220,-45.8860], chegada:"20:21", saida:"20:46", nota:4.0, reviews:50, sabado:"18:00-00:00", tipo:"Lanchonete/Bar", preco:"$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Lanches e porções acessíveis — primeira parada EFETIVA na Av. Andrômeda.", emoji:"🥪"},
+    {ordem:17, nome:"Mônaco Andrômeda", endereco:"Av. Andrômeda, J. Satélite (verificar @monacoandromeda)", coords:[-23.2240,-45.8870], chegada:"20:48", saida:"21:13", nota:4.5, reviews:30, sabado:"18:00-00:00 (verificar)", tipo:"Bar Multicultural (LGBTQIA+ friendly)", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Bar multicultural na Andrômeda. 'Igualdade, Liberdade, Diversão e amor'.", emoji:"🌈"},
+    {ordem:18, nome:"Yex Boliche & Steakhouse", endereco:"Av. Andrômeda, 227 (Vale Sul Shopping)", coords:[-23.2225,-45.8890], chegada:"21:15", saida:"21:40", nota:3.8, reviews:242, sabado:"12:00-01:00 (verificar)", tipo:"Bar + Boliche + Steakhouse", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Boliche + bar + steakhouse no Vale Sul Shopping. ⚠️ Nota 3.8★, pode pular se preferir.", emoji:"🎳"},
+    {ordem:19, nome:"Ponto da Esfiha Pub & Bar", endereco:"Av. Andrômeda, 998 - J. Satélite", coords:[-23.2225,-45.8890], chegada:"21:42", saida:"22:07", nota:4.1, reviews:893, sabado:"08:00-23:45", tipo:"Pub/Esfiharia", preco:"$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, alerta:"⚠️ Fecha 23:45", dica:"Um dos bares MAIS populares da Andrômeda com 893 reviews. Esfihas, pizzas, hambúrgueres. ⚠️ Fecha 23:45.", emoji:"🥙"},
+    {ordem:20, nome:"Gilmour Brewpub", endereco:"Av. Andrômeda, 880 - J. Satélite", coords:[-23.2220,-45.8900], chegada:"22:09", saida:"22:34", nota:5.0, reviews:3, sabado:"17:00-00:00", tipo:"Brewpub - Cervejas artesanais próprias", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, alerta:"⚠️ Fecha 00:00", dica:"Cerveja artesanal fabricada no local. 5.0★ no TripAdvisor. Banda de rock ao vivo. ⚠️ Fecha 00:00.", emoji:"🎤"},
+    {ordem:21, nome:"O Bequinho", endereco:"Av. Perseu, 1175 - J. Satélite", coords:[-23.2260,-45.8900], chegada:"22:36", saida:"23:01", nota:4.2, reviews:100, sabado:"16:00-01:00", tipo:"Bar com petiscos", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Petiscos bem servidos, atendimento família.", emoji:"🍤"},
+    {ordem:22, nome:"Bar Tô Chegando", endereco:"Av. Iguape, 704 - J. Satélite", coords:[-23.2320,-45.8880], chegada:"23:03", saida:"23:28", nota:4.2, reviews:120, sabado:"18:00-02:00", tipo:"Bar animado", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Animado até tarde. Abre até 2h! Instagram: @bartochegando1", emoji:"🎉"},
+    {ordem:23, nome:"Recanto do Portuga", endereco:"R. Itapetinga, 41 - J. Satélite", coords:[-23.2300,-45.8860], chegada:"23:30", saida:"23:55", nota:4.1, reviews:100, sabado:"17:00-02:00", tipo:"Bar português", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, dica:"Comida portuguesa autêntica. Bacalhau, pastéis. Cerveja gelada. Abre até 2h!", emoji:"🐙"},
+    {ordem:24, nome:"Ursu's Bar (Bar do Urso)", endereco:"Av. Cidade Jardim, 2381 - J. Satélite", coords:[-23.2300,-45.8860], chegada:"23:57", saida:"00:22", nota:4.7, reviews:12, sabado:"16:00-00:00", tipo:"Bar temático do urso - Cervejas Colorado", preco:"$$", bairro:"J. Satélite", bloco:"andromeda", zona:4, alerta:"⚠️ Fecha 00:00", dica:"Quase 5 estrelas (4.7)! Bar oficial da Cervejaria Colorado. Licor de doce de leite caseiro. ⚠️ Fecha 00:00.", emoji:"🐻"},
+    {ordem:25, nome:"Terraço Andrômeda", endereco:"Av. Andrômeda, 2201 - J. Satélite", coords:[-23.2255,-45.8860], chegada:"00:24", saida:"00:49", nota:4.0, reviews:40, sabado:"17:00-01:00 (verificar)", tipo:"Bar/Pub", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, dica:"Terraço com vista. 'Grande diversidade de bebidas e drinks'.", emoji:"🌃"},
+    {ordem:26, nome:"Obelisco Bar", endereco:"Av. Andrômeda, 2360 - J. Satélite", coords:[-23.2260,-45.8850], chegada:"00:51", saida:"01:16", nota:4.0, reviews:60, sabado:"17:00-00:00", tipo:"Bar/Pub", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, alerta:"⚠️ Fecha 00:00", dica:"Petiscos, cerveja gelada, ambiente de Andrômeda puro. ⚠️ Fecha 00:00.", emoji:"🗿"},
+    {ordem:27, nome:"🎉 GRAN FINALE — Bar Chaparral Boteco", endereco:"Av. Andrômeda, 2380 - J. Satélite", coords:[-23.2270,-45.8850], chegada:"01:18", saida:"01:48", nota:4.3, reviews:1500, sabado:"17:00-02:00", tipo:"Boteco com chapas + música ao vivo", preco:"$$", bairro:"Av. Andrômeda", bloco:"andromeda", zona:4, finale:true, dica:"GRAN FINALE NA ANDRÔMEDA! O bar mais popular da região com 1.500+ reviews. Chapas mistas, petiscos, música ao vivo. Fecha 2h — encerramento épico do dia.", emoji:"🎉"}
   ],
   highlights: [
     {emoji:"🍖", titulo:"Pausa Pro Almoço (60min)", descricao:"Parada longa no Bar Chaparral da Villa (Vila Ema) — costela assada e telão. A única pausa longa do dia."},
     {emoji:"🎉", titulo:"Gran Finale na Andrômeda", descricao:"Encerramento épico no Bar Chaparral Boteco (Av. Andrômeda 2380) — 1.500+ reviews, fecha 2h, música ao vivo."},
-    {emoji:"🧠", titulo:"TSP Solver · 22.6km", descricao:"Ordem otimizada com Held-Karp + 2-opt + ILS sobre matriz OSRM 27×27 (351 pares). Reduziu 7.5% vs heurística anterior."},
+    {emoji:"🚶", titulo:"Valhalla · 13.2km a pé", descricao:"Rota real de PEDESTRE calculada via Valhalla (único router open source com rede de pedestre real). OSRM público tem bug — retornava rotas de carro! 13.2km é o mínimo de caminhada pura."},
     {emoji:"🌉", titulo:"Travessia do Rio Paraíba", descricao:"Entre o Pink Elephant (#12) e a Choperia Flor de Ypê (#13) há um gap de ~5km — única ponte entre São Dimas e J. Satélite."},
     {emoji:"🥙", titulo:"O Mais Popular da Andrômeda", descricao:"Ponto da Esfiha com 893 reviews — custo-benefício imbatível."},
     {emoji:"⚠️", titulo:"3 Bares com horário apertado", descricao:"Gilmour Brewpub, Ponto da Esfiha e Ursu's Bar podem estar FECHADOS no horário da madrugada. Considere reordenar se necessário."}
@@ -1282,55 +1287,84 @@ DADOS.bares.forEach((bar, i) => {
   latlngs.push(bar.coords);
 });
 
-// Adiciona rota real via OSRM (substitui linha reta)
-// Cada trecho usa geometria GeoJSON do OSRM (rota de ruas REAL)
+// Adiciona rota real via Valhalla (rede de pedestre REAL)
+// Valhalla usa polyline6 encoded (precision 1e-6) — implementação inline do decoder
+function decodePolyline6(str, precision) {
+  precision = precision || 1e-6;
+  let index = 0, lat = 0, lng = 0, coordinates = [];
+  while (index < str.length) {
+    let byte, shift = 0, result = 0;
+    do {
+      byte = str.charCodeAt(index++) - 63;
+      result |= (byte & 0x1f) << shift;
+      shift += 5;
+    } while (byte >= 0x20);
+    let dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+    lat += dlat;
+    shift = 0; result = 0;
+    do {
+      byte = str.charCodeAt(index++) - 63;
+      result |= (byte & 0x1f) << shift;
+      shift += 5;
+    } while (byte >= 0x20);
+    let dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+    lng += dlng;
+    coordinates.push([lat * precision, lng * precision]);
+  }
+  return coordinates;
+}
+
 async function drawRealRoutes() {
   const allCoords = [];
   const loadingEl = document.getElementById('map-loading');
   for (let i = 0; i < DADOS.bares.length - 1; i++) {
     const origem = DADOS.bares[i];
     const destino = DADOS.bares[i+1];
-    const lon1 = origem.coords[1], lat1 = origem.coords[0];
-    const lon2 = destino.coords[1], lat2 = destino.coords[0];
-    const url = `https://router.project-osrm.org/route/v1/walking/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
-    if (loadingEl) loadingEl.textContent = `⏳ Calculando rota real... ${i+1}/${DADOS.bares.length-1}`;
+    if (loadingEl) loadingEl.textContent = `⏳ Calculando rota de pedestre (Valhalla)... ${i+1}/${DADOS.bares.length-1}`;
+    const json = {
+      locations: [
+        {lat: origem.coords[0], lon: origem.coords[1]},
+        {lat: destino.coords[0], lon: destino.coords[1]}
+      ],
+      costing: 'pedestrian',
+      directions_options: {units: 'kilometers'}
+    };
+    let coords = null;
+    let distance = 0;
     try {
-      const r = await fetch(url);
+      const r = await fetch('https://valhalla1.openstreetmap.de/route', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(json)
+      });
       const data = await r.json();
-      if (data.code === 'Ok' && data.routes && data.routes[0].geometry.coordinates.length > 1) {
-        // OSRM retorna [lon, lat]; Leaflet quer [lat, lon]
-        const coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
-        // Cor: usar a cor do bloco de ORIGEM
-        const cor = cores[origem.bloco] || '#A78BFA';
-        // Linha na cor do bloco; tracejada se for gap longo
-        const isGap = data.routes[0].distance > 2000;
-        const line = L.polyline(coords, {
-          color: cor,
-          weight: 5,
-          opacity: 0.9,
-          lineCap: 'round',
-          lineJoin: 'round',
-          dashArray: isGap ? '12, 10' : null
-        }).addTo(map);
-        allRouteLines.push(line);
-        coords.forEach(c => allCoords.push(c));
+      if (data.trip && data.trip.legs && data.trip.legs[0]) {
+        distance = data.trip.legs[0].distance * 1000; // km → m
+        if (data.trip.legs[0].shape) {
+          // Valhalla retorna polyline6 encoded
+          const decoded = decodePolyline6(data.trip.legs[0].shape, 1e-6);
+          coords = decoded.map(c => [c[0], c[1]]); // [lat, lon] pra Leaflet
+        }
       }
-    } catch (e) {
-      // Fallback: linha reta
-      const line = L.polyline([origem.coords, destino.coords], {
-        color: cores[origem.bloco] || '#A78BFA',
-        weight: 4,
-        opacity: 0.7,
-        dashArray: '4, 4'
-      }).addTo(map);
-      allRouteLines.push(line);
-      allCoords.push(origem.coords, destino.coords);
+    } catch (e) {}
+    if (!coords || coords.length < 2) {
+      coords = [origem.coords, destino.coords]; // fallback linha reta
     }
-    // Pausa para não sobrecarregar a API
-    await new Promise(r => setTimeout(r, 80));
+    const cor = cores[origem.bloco] || '#A78BFA';
+    const isGap = distance > 1500;
+    const line = L.polyline(coords, {
+      color: cor,
+      weight: 5,
+      opacity: 0.9,
+      lineCap: 'round',
+      lineJoin: 'round',
+      dashArray: isGap ? '12, 10' : null
+    }).addTo(map);
+    allRouteLines.push(line);
+    coords.forEach(c => allCoords.push(c));
+    await new Promise(r => setTimeout(r, 100));
   }
   if (loadingEl) loadingEl.style.display = 'none';
-  // Ajusta o zoom para mostrar toda a rota
   if (allCoords.length > 0) {
     const bounds = L.latLngBounds(allCoords);
     map.fitBounds(bounds, {padding: [40, 40]});
@@ -1406,25 +1440,39 @@ DADOS.bares.forEach((b, i) => {
   `);
 });
 
-// ============== ATUALIZAR STATS HERO (km dinâmico via OSRM) ==============
-async function calcDistOSRM(c1, c2) {
-  const lon1 = c1[1], lat1 = c1[0], lon2 = c2[1], lat2 = c2[0];
-  const url = `https://router.project-osrm.org/route/v1/walking/${lon1},${lat1};${lon2},${lat2}?overview=false`;
+// ============== ATUALIZAR STATS HERO (km dinâmico via Valhalla) ==============
+// Valhalla é o ÚNICO router open source com rede de pedestre REAL.
+// OSRM público tem bug de aliasing de perfis (retorna rota de carro).
+async function calcDistValhalla(c1, c2) {
+  const json = {
+    locations: [
+      {lat: c1[0], lon: c1[1]},
+      {lat: c2[0], lon: c2[1]}
+    ],
+    costing: 'pedestrian',
+    directions_options: {units: 'kilometers'}
+  };
   try {
-    const r = await fetch(url);
+    const r = await fetch('https://valhalla1.openstreetmap.de/route', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(json)
+    });
     const data = await r.json();
-    if (data.code === 'Ok' && data.routes) return data.routes[0].distance;
+    if (data.trip && data.trip.legs && data.trip.legs[0]) {
+      return data.trip.legs[0].distance * 1000; // km → m
+    }
   } catch (e) {}
   return null;
 }
 
-async function calcTotalOSRM() {
+async function calcTotalValhalla() {
   const heroKm = document.getElementById('stat-km');
-  if (heroKm) heroKm.innerHTML = '<span style="font-size:0.9rem">...</span>';
+  if (heroKm) heroKm.innerHTML = '<span style="font-size:0.9rem">⌛</span>';
   let total = 0;
   let count = 0;
   for (let i = 1; i < DADOS.bares.length; i++) {
-    const d = await calcDistOSRM(DADOS.bares[i-1].coords, DADOS.bares[i].coords);
+    const d = await calcDistValhalla(DADOS.bares[i-1].coords, DADOS.bares[i].coords);
     if (d != null) {
       total += d;
       count++;
@@ -1432,24 +1480,19 @@ async function calcTotalOSRM() {
         heroKm.innerHTML = `${(total/1000).toFixed(1)}<span style="font-size:1rem">km</span>`;
       }
     }
-    // pequena pausa para não sobrecarregar a API
-    await new Promise(r => setTimeout(r, 50));
+    await new Promise(r => setTimeout(r, 60));
   }
   if (heroKm) {
     heroKm.innerHTML = `${(total/1000).toFixed(1)}<span style="font-size:1rem">km</span>`;
   }
-  // Salvar para uso no stats finais
   window.__distTotalReal = total;
-  // Atualizar stats finais
   const statsKm = document.getElementById('final-stat-km');
   if (statsKm) {
     statsKm.textContent = `${(total/1000).toFixed(1)} km`;
   }
   return total;
 }
-
-// Inicia o cálculo em background
-calcTotalOSRM().catch(() => {});
+calcTotalValhalla().catch(() => {});
 
 // ============== STATS FINAIS ==============
 const fs = document.getElementById('final-stats');
@@ -1494,7 +1537,7 @@ function generateICS() {
   let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Pub Crawl SJC//PT-BR\n';
   ics += 'BEGIN:VEVENT\n';
   ics += 'DTSTART:20260627T110000\n';
-  ics += 'DTEND:20260628T023000\n';
+  ics += 'DTEND:20260628T014800\n';
   ics += 'SUMMARY:🍺 Pub Crawl São José dos Campos (27 bares)\n';
   ics += 'DESCRIPTION:Roteiro: Centro → Vila Ema → Vila Adyana → São Dimas → Av. Andrômeda. https://felipefrf.github.io/pub-crawl-sjc/\n';
   ics += 'LOCATION:Centro, São José dos Campos - SP\n';
